@@ -1,0 +1,116 @@
+PARSER_BEGIN(Parser0)
+
+import java.util.*;
+
+/** ID lister. */
+public class Parser0 {
+}
+
+PARSER_END(Parser0)
+
+SKIP :
+{
+  " "
+| "\t"
+| "\r"
+}
+
+TOKEN :
+{ 
+  < EQ : "=" >
+  |
+  < DEF : "def" >
+  |
+  < IN : "in" >
+  |
+  < END : "end" >
+  |
+  < Id: ["a"-"z","A"-"Z"] ( ["a"-"z","A"-"Z","0"-"9"] )* >
+  |
+  < Num: (["0"-"9"]) + >
+  |
+  < PLUS : "+" >
+  |
+  < MINUS : "-">
+  |
+  < MUL : "*">
+  |
+  < DIV : "/">
+  |
+  < LPAR : "(" >
+  |
+  < RPAR : ")" >
+  |
+  < EL: "\n" >
+}
+
+ASTNode Start() :
+{
+ASTNode t1;
+}
+{
+   t1 = Exp() <EL>
+	{ return t1; }
+}
+
+ASTNode Exp() :
+{
+ASTNode t1,t2;
+Token tok;
+}
+{
+     t1 = Term() ( ( tok=<PLUS> | tok=<MINUS> ) t2=Term() 
+
+                 { t1 = tok.kind == PLUS ? new ASTAdd(t1,t2) : new ASTSub(t1,t2); }
+
+                 ) *
+    
+     { return t1; }
+
+}
+
+ASTNode Term() :
+{
+ASTNode t1,t2;
+Token tok;
+}
+{
+     t1=Fact() ( ( tok=<MUL> | tok=<DIV> ) t2=Fact()
+
+          { t1 = tok.kind == MUL ? new ASTMul(t1,t2) : new ASTDiv(t1,t2); }
+     
+       ) * 
+
+     { return t1; }  
+	
+}
+
+ASTNode Def() :
+{
+    ASTNode t1, tf;
+    Token tok;
+    Map<String, ASTNode> m = new HashMap<>();
+}
+{
+    (
+        <DEF> (tok=<Id> <EQ> t1=Exp() { m.put(tok.image, t1); })+ <IN> (<EL>)* tf=Exp() (<EL>)* <END>
+    )
+    { return new ASTDef(m, tf); }
+}
+
+ASTNode Fact() :
+{
+ASTNode t1;
+ASTNode tf;
+Token tok;
+}
+{
+   ( 
+     tok=<Num> { t1 = new ASTNum(Integer.parseInt(tok.image)); } | 
+     <LPAR> t1=Exp() <RPAR> |
+     <MINUS> t1=Fact() { t1 = new ASTUminus(t1); } |
+     tok = <Id> { t1 = new ASTId(tok.image); } |
+     t1 = Def()
+   )   
+  { return t1; }   
+}

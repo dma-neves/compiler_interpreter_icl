@@ -1,0 +1,6 @@
+BA -> BM (|| BM)*
+BM -> R(&&R)*
+R -> E > E
+E -> T (+T)*
+T -> F(*F)*
+F -> num | id | true | false | (E) | -F | ~F | def ids in E end
