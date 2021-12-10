@@ -1,5 +1,8 @@
 import java.util.*;
 
+import exceptions.InterpreterException;
+import exceptions.InvalidIdException;
+
 public class Environment<T> {
 
     Map<String, T> associations;
@@ -31,14 +34,14 @@ public class Environment<T> {
         associations.put(id, val);
     }
 
-    T find(String id) throws Exception {
+    T find(String id) throws InterpreterException {
 
         T val = associations.get(id);
         if(val != null)
             return val;
         else {
 
-            if(parent == null) throw new Exception("No value found for the given id");
+            if(parent == null) throw new InvalidIdException("No value found for the given id");
             return parent.find(id);
         }
     }

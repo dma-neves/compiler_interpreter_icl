@@ -1,5 +1,8 @@
 import java.util.*;
 
+import exceptions.InterpreterException;
+import exceptions.InvalidTypeException;
+
 public class ASTDef implements ASTNode{
 
     Map<String, ASTNode> assignments;
@@ -11,7 +14,7 @@ public class ASTDef implements ASTNode{
         this.exp = exp;
     }
 
-    public IValue eval(Environment<IValue> env) throws Exception {
+    public IValue eval(Environment<IValue> env) throws InterpreterException {
 
         env = env.beginScope();
 

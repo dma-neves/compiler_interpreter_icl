@@ -1,6 +1,9 @@
+import exceptions.InterpreterException;
+import exceptions.InvalidTypeException;
+
 public interface ASTNode {
 
-    IValue eval(Environment<IValue> env) throws Exception;
+    IValue eval(Environment<IValue> env) throws InterpreterException;
     void compile(CodeBlock cb, Environment<Integer[]> env) throws Exception;
 }
 

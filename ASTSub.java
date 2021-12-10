@@ -1,14 +1,17 @@
+import exceptions.InterpreterException;
+import exceptions.InvalidTypeException;
+
 public class ASTSub implements ASTNode {
 
     ASTNode lhs, rhs;
 
-    public IValue eval(Environment<IValue> env) throws Exception
+    public IValue eval(Environment<IValue> env) throws InterpreterException
     { 
         IValue v1 = lhs.eval(env);
         IValue v2 = rhs.eval(env);
 
         if(!(v1 instanceof IntVal) || !(v2 instanceof IntVal))
-            throw new Exception("Invalid type while adding");
+            throw new InvalidTypeException("Invalid type while adding");
 
         IntVal v1_int = (IntVal)v1;
         IntVal v2_int = (IntVal)v2;

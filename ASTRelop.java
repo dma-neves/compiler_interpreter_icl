@@ -1,15 +1,18 @@
+import exceptions.InterpreterException;
+import exceptions.InvalidTypeException;
+
 public class ASTRelop implements ASTNode {
 
     ASTNode lhs, rhs;
     Token op;
 
-    public IValue eval(Environment<IValue> env) throws Exception {
+    public IValue eval(Environment<IValue> env) throws InterpreterException {
 
         IValue v1 = lhs.eval(env);
         IValue v2 = rhs.eval(env);
 
         if(!(v1 instanceof IntVal) || !(v2 instanceof IntVal))
-            throw new Exception("Invalid type while performing relational operation");
+            throw new InvalidTypeException("Invalid type while performing relational operation");
 
         int v1_int = ( (IntVal)v1 ).getVal();
         int v2_int = ( (IntVal)v2 ).getVal();
@@ -35,7 +38,7 @@ public class ASTRelop implements ASTNode {
                 return new BoolVal(v1_int <= v2_int);
         }
 
-        throw new Exception("Invalid token");
+        throw new InterpreterException("Invalid token");
     }
 
     public void compile(CodeBlock cb, Environment<Integer[]> env) throws Exception {

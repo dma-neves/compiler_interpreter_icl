@@ -25,6 +25,10 @@ TOKEN :
 	|
 	< END : "end" >
 	|
+	< TRUE : "true" >
+	|
+	< FALSE : "false" >
+	|
 	< Id: ["a"-"z","A"-"Z"] ( ["a"-"z","A"-"Z","0"-"9"] )* >
 	|
 	< Num: (["0"-"9"]) + >
@@ -43,10 +47,6 @@ TOKEN :
 	|
 	< EL: "\n" >
 	|
-	< TRUE : "true" >
-	|
-	< FALSE : "false" >
-	|
 	< OR : "||" >
 	|
 	< AND : "&&" >
@@ -62,6 +62,10 @@ TOKEN :
 	< IEQ : "==" >
 	|
 	< DIF : "!=" >
+	|
+	< QM : "?" >
+	|
+	< COL : ":" >
 }
 
 ASTNode Start() :
@@ -69,9 +73,7 @@ ASTNode Start() :
 	ASTNode t1;
 }
 {
-		( t1 = BoolAdd() <EL> { return t1; } | <EOF> { return null; })
-		//t1 = BoolAdd() <EL>
-		//{ return t1; }
+		( t1 = BoolAdd() <EL> { return t1; } | <EOF> { return null; } )
 }
 
 ASTNode BoolAdd() :
@@ -80,7 +82,6 @@ ASTNode BoolAdd() :
 }
 {
 	t1=BoolMult() (<OR> t2=BoolMult() { t1=new ASTBoolAdd(t1, t2); } )*
-
 	{ return t1; }
 }
 
@@ -160,7 +161,7 @@ ASTNode Fact() :
 {
 	( 
 		tok=<Num> { t1 = new ASTNum(Integer.parseInt(tok.image)); } | 
-		<LPAR> t1=Start() <RPAR> |
+		<LPAR> t1=BoolAdd() <RPAR> |
 		<MINUS> t1=Fact() { t1 = new ASTUminus(t1); } |
 		tok = <Id> { t1 = new ASTId(tok.image); } |
 		t1 = Def()
@@ -168,3 +169,15 @@ ASTNode Fact() :
 	
 	{ return t1; }   
 }
+
+/*
+ASTNode Ternary() :
+{
+	ASTNode cond, t1 = null, t2;
+}
+{
+	cond = BoolAdd() ( <QM> t1=BoolAdd() <COL> t2=BoolAdd() { t1 = new ASTTernaryOperator(cond, t1, t2); }
+
+	{ return t1; }
+}
+*/

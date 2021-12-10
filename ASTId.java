@@ -1,3 +1,6 @@
+import exceptions.InterpreterException;
+import exceptions.InvalidTypeException;
+
 public class ASTId implements ASTNode {
 
 	String id;
@@ -7,7 +10,7 @@ public class ASTId implements ASTNode {
 		this.id = id;
 	}
 
-	public IValue eval(Environment<IValue> env) throws Exception {
+	public IValue eval(Environment<IValue> env) throws InterpreterException {
 		
 		return env.find(id);
 	}

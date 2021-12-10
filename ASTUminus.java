@@ -1,13 +1,16 @@
+import exceptions.InterpreterException;
+import exceptions.InvalidTypeException;
+
 public class ASTUminus implements ASTNode {
 
     ASTNode n;
 
-    public IValue eval(Environment<IValue> env) throws Exception {
+    public IValue eval(Environment<IValue> env) throws InterpreterException {
 
         IValue val = n.eval(env);
 
         if(!(val instanceof IntVal))
-            throw new Exception("Invalid type while performing minus operation");
+            throw new InvalidTypeException("Invalid type while performing minus operation");
 
         IntVal val_int = (IntVal)val;
 

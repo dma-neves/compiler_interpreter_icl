@@ -1,14 +1,17 @@
+import exceptions.InterpreterException;
+import exceptions.InvalidTypeException;
+
 public class ASTBoolMult implements ASTNode {
 
     ASTNode lhs, rhs;
 
-    public IValue eval(Environment<IValue> env) throws Exception {
+    public IValue eval(Environment<IValue> env) throws InterpreterException {
 
         IValue v1 = lhs.eval(env);
         IValue v2 = rhs.eval(env);
 
         if(!(v1 instanceof BoolVal) || !(v2 instanceof BoolVal))
-            throw new Exception("Invalid type while adding");
+            throw new InvalidTypeException("Invalid type while adding");
 
         BoolVal v1_bool = (BoolVal)v1;
         BoolVal v2_bool = (BoolVal)v2;

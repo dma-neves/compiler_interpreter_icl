@@ -1,15 +1,18 @@
+import exceptions.InterpreterException;
+import exceptions.InvalidTypeException;
+
 public class ASTTernaryOperator implements ASTNode {
 
-    ASTNode test, option_a, option_b;
+    ASTNode cond, option_a, option_b;
 
     @Override
-    public IValue eval(Environment<IValue> env) throws Exception {
+    public IValue eval(Environment<IValue> env) throws InterpreterException {
 
-        IValue tval = test.eval(env);
-        if(! (tval instanceof BoolVal) )
-            throw new Exception();
+        IValue cval = cond.eval(env);
+        if(! (cval instanceof BoolVal) )
+            throw new InvalidTypeException("Invalid type while evaluating ternary operator");
 
-        boolean t = ( (BoolVal)tval ).val;
+        boolean t = ( (BoolVal)cval ).val;
 
         return t ? option_a.eval(env) : option_b.eval(env);
     }
@@ -20,9 +23,9 @@ public class ASTTernaryOperator implements ASTNode {
         
     }
 
-    public ASTTernaryOperator(ASTNode test, ASTNode option_a, ASTNode option_b) {
+    public ASTTernaryOperator(ASTNode cond, ASTNode option_a, ASTNode option_b) {
 
-        this.test = test;
+        this.cond = cond;
         this.option_a = option_a;
         this.option_b = option_b;
     }

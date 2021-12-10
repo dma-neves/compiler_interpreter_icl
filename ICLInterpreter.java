@@ -1,3 +1,6 @@
+import exceptions.InterpreterException;
+import exceptions.InvalidTypeException;
+
 public class ICLInterpreter {
 
     /** Main entry point. */
@@ -13,8 +16,18 @@ public class ICLInterpreter {
                     System.exit(0);
 
                 ast.eval(new Environment<>()).print();
-            } catch (Exception e) {
-                System.out.println("Syntax Error!");
+            }
+            catch(InvalidTypeException e) {
+
+                System.out.println("Type erro: " + e.getMessage());
+                parser.ReInit(System.in);
+            }
+            catch (InterpreterException e) {
+                System.out.println("Syntax error: " + e.getMessage());
+                parser.ReInit(System.in);
+            }
+            catch(ParseException e) {
+                System.out.println("Syntax error");
                 parser.ReInit(System.in);
             }
         }
