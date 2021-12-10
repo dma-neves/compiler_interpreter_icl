@@ -13,7 +13,7 @@ public class ASTSub implements ASTNode {
         IntVal v1_int = (IntVal)v1;
         IntVal v2_int = (IntVal)v2;
 
-        return new IntVal(v1_int.getVal() + v2_int.getVal());
+        return new IntVal(v1_int.getVal() - v2_int.getVal());
     }
 
     public void compile(CodeBlock cb, Environment<Integer[]> env) throws Exception {

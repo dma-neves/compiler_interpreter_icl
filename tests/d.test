@@ -1,0 +1,1 @@
+def x=1 in def y=x+2 in y*2 end end

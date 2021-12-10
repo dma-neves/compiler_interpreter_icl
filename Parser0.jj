@@ -17,26 +17,6 @@ SKIP :
 
 TOKEN :
 {
-	< OR : "||" >
-	|
-	< AND : "&&" >
-	|
-	< GT : ">" >
-	|
-	< ST : "<" >
-	|
-	< GTE : ">=" >
-	|
-	< STE : "<=" >
-	|
-	< IEQ : "==" >
-	|
-	< DIF : "!=" >
-	|
-	< TRUE : "true" >
-	|
-	< FALSE : "false" >
-	| 
 	< EQ : "=" >
 	|
 	< DEF : "def" >
@@ -62,6 +42,26 @@ TOKEN :
 	< RPAR : ")" >
 	|
 	< EL: "\n" >
+	|
+	< TRUE : "true" >
+	|
+	< FALSE : "false" >
+	|
+	< OR : "||" >
+	|
+	< AND : "&&" >
+	|
+	< GT : ">" >
+	|
+	< ST : "<" >
+	|
+	< GTE : ">=" >
+	|
+	< STE : "<=" >
+	|
+	< IEQ : "==" >
+	|
+	< DIF : "!=" >
 }
 
 ASTNode Start() :
@@ -69,8 +69,9 @@ ASTNode Start() :
 	ASTNode t1;
 }
 {
-		 t1 = IntAdd() <EL>
-		{ return t1; }
+		( t1 = BoolAdd() <EL> { return t1; } | <EOF> { return null; })
+		//t1 = BoolAdd() <EL>
+		//{ return t1; }
 }
 
 ASTNode BoolAdd() :
@@ -145,7 +146,7 @@ ASTNode Def() :
 }
 {
 	(
-		<DEF> (tok=<Id> <EQ> t1=Start() { m.put(tok.image, t1); } )+ <IN> (<EL>)* tf=Start() (<EL>)* <END>
+		<DEF> (tok=<Id> <EQ> t1=BoolAdd() { m.put(tok.image, t1); } )+ <IN> (<EL>)* tf=BoolAdd() (<EL>)* <END>
 	)
 	{ return new ASTDef(m, tf); }
 }
@@ -167,4 +168,3 @@ ASTNode Fact() :
 	
 	{ return t1; }   
 }
-

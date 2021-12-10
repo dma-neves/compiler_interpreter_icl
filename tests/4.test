@@ -1,0 +1,1 @@
+if def x = new 0 in while !x < 3 do x := !x + 1; print !x end end == 3 then print 42 else -1 end == 42
