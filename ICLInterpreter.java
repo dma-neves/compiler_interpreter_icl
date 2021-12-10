@@ -8,7 +8,7 @@ public class ICLInterpreter {
             try {
                 System.out.print("> ");
                 ASTNode ast = parser.Start();
-                System.out.println(ast.eval(new Environment()));
+                ast.eval(new Environment<>()).print();
             } catch (Exception e) {
                 System.out.println("Syntax Error!");
                 parser.ReInit(System.in);

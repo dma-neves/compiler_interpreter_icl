@@ -2,8 +2,9 @@ public class ASTNum implements ASTNode {
 
     int val;
 
-    public int eval(Environment<Integer> env) {
-        return val;
+    public IValue eval(Environment<IValue> env) {
+
+        return new IntVal(val);
     }
 
     public void compile(CodeBlock cb, Environment<Integer[]> env) {

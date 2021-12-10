@@ -2,10 +2,17 @@ public class ASTMul implements ASTNode {
 
     ASTNode lhs, rhs;
 
-    public int eval(Environment<Integer> env) throws Exception {
-        int v1 = lhs.eval(env);
-        int v2 = rhs.eval(env);
-        return v1 * v2;
+    public IValue eval(Environment<IValue> env) throws Exception {
+        IValue v1 = lhs.eval(env);
+        IValue v2 = rhs.eval(env);
+
+        if(!(v1 instanceof IntVal) | !(v2 instanceof IntVal))
+            throw new Exception("Invalid type while performing division");
+
+        IntVal v1_int = (IntVal)v1;
+        IntVal v2_int = (IntVal)v2;
+
+        return new IntVal(v1_int.getVal() * v2_int.getVal());
     }
 
     public void compile(CodeBlock cb, Environment<Integer[]> env) throws Exception {

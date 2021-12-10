@@ -1,4 +1,4 @@
-SOURCE = source_2
+SOURCE = source_4
 
 all: clean compile run
 	
@@ -12,9 +12,9 @@ compile:
 	javac ICLCompiler.java
 
 clean:
-	-rm Parse*.java
+	-rm *Parse*.java
 	-rm *Token*.java
-	-# rm ICLInterpreterConstants.java
+	# -rm ICLInterpreterConstants.java
 	-rm SimpleCharStream.java
 	-rm *.class
 	-rm *.j

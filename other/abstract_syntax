@@ -1,6 +1,11 @@
-BA -> BM (|| BM)*
-BM -> R(&&R)*
-R -> E > E
-E -> T (+T)*
-T -> F(*F)*
-F -> num | id | true | false | (E) | -F | ~F | def ids in E end
+BA -> BM (|| BM)*   // Boolean additives
+BM -> R(&&R)*       // Boolean multiplicatives
+R -> E > E          // Relational operators
+E -> T (+T)*        // Integer additives (Expressions)
+T -> F(*F)*         // Integer multiplicatives (Terms)
+F -> num | id |     // Factors
+     true | false | 
+     (E) | -F | ~F 
+     | DEF
+
+DEF -> ...

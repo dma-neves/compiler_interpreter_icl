@@ -11,7 +11,7 @@ public class ASTDef implements ASTNode{
         this.exp = exp;
     }
 
-    public int eval(Environment<Integer> env) throws Exception {
+    public IValue eval(Environment<IValue> env) throws Exception {
 
         env = env.beginScope();
 
@@ -20,11 +20,11 @@ public class ASTDef implements ASTNode{
             String id = assignment.getKey();
             ASTNode assignmentExp = assignment.getValue();
 
-            int assignmentValue = assignmentExp.eval(env);
+            IValue assignmentValue = assignmentExp.eval(env);
             env.assoc(id, assignmentValue);
         }
 
-        int val = exp.eval(env);
+        IValue val = exp.eval(env);
         env = env.endScope();
         return val;    
     }
