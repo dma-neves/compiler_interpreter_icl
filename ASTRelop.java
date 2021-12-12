@@ -1,10 +1,13 @@
 import exceptions.InterpreterException;
 import exceptions.InvalidTypeException;
+import types.BoolVal;
+import types.IValue;
+import types.IntVal;
 
 public class ASTRelop implements ASTNode {
 
     ASTNode lhs, rhs;
-    Token op;
+    String op;
 
     public IValue eval(Environment<IValue> env) throws InterpreterException {
 
@@ -17,24 +20,24 @@ public class ASTRelop implements ASTNode {
         int v1_int = ( (IntVal)v1 ).getVal();
         int v2_int = ( (IntVal)v2 ).getVal();
 
-        switch(op.kind) {
+        switch(op) {
 
-            case Parser0Constants.GT:
+            case ">":
                 return new BoolVal(v1_int > v2_int);
 
-            case Parser0Constants.ST:
+            case "<":
                 return new BoolVal(v1_int < v2_int);
 
-            case Parser0Constants.IEQ:
+            case "==":
                 return new BoolVal(v1_int == v2_int);
 
-            case Parser0Constants.DIF:
+            case "~=":
                 return new BoolVal(v1_int != v2_int);
 
-            case Parser0Constants.GTE:
+            case ">=":
                 return new BoolVal(v1_int >= v2_int);
 
-            case Parser0Constants.STE:
+            case "<=":
                 return new BoolVal(v1_int <= v2_int);
         }
 
@@ -46,7 +49,7 @@ public class ASTRelop implements ASTNode {
         // TODO
     }
 
-    public ASTRelop(ASTNode l, Token operator, ASTNode r) {
+    public ASTRelop(ASTNode l, String operator, ASTNode r) {
         lhs = l;
         rhs = r;
         op = operator;

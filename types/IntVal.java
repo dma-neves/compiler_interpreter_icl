@@ -1,3 +1,4 @@
+package types;
 public class IntVal implements IValue {
     
     int val;

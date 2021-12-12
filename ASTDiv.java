@@ -1,5 +1,7 @@
 import exceptions.InterpreterException;
 import exceptions.InvalidTypeException;
+import types.IValue;
+import types.IntVal;
 
 public class ASTDiv implements ASTNode {
 

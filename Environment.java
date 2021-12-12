@@ -41,7 +41,7 @@ public class Environment<T> {
             return val;
         else {
 
-            if(parent == null) throw new InvalidIdException("No value found for the given id");
+            if(parent == null) throw new InvalidIdException("No value found for the given id '" + id + "'");
             return parent.find(id);
         }
     }

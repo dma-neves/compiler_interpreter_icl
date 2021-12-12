@@ -29,6 +29,20 @@ TOKEN :
 	|
 	< FALSE : "false" >
 	|
+	< NEW : "new" >
+	|
+	< PRINT : "print" >
+	|
+	< IF : "if" >
+	|
+	< THEN : "then" >
+	|
+	< ELSE : "else" >
+	|
+	< WHILE : "while" >
+	|
+	< DO : "do" >
+	|
 	< Id: ["a"-"z","A"-"Z"] ( ["a"-"z","A"-"Z","0"-"9"] )* >
 	|
 	< Num: (["0"-"9"]) + >
@@ -45,11 +59,11 @@ TOKEN :
 	|
 	< RPAR : ")" >
 	|
-	< EL: "\n" >
-	|
 	< OR : "||" >
 	|
 	< AND : "&&" >
+	|
+	< NOT : "~" >
 	|
 	< GT : ">" >
 	|
@@ -61,11 +75,19 @@ TOKEN :
 	|
 	< IEQ : "==" >
 	|
-	< DIF : "!=" >
+	< DIF : "~=" >
 	|
 	< QM : "?" >
 	|
 	< COL : ":" >
+	|
+	< ASSIGN : ":=" >
+	|
+    <DEREF : "!" >
+    |
+    < SEQ : ";" >
+    |
+	< EL: "\n" >
 }
 
 ASTNode Start() :
@@ -73,7 +95,25 @@ ASTNode Start() :
 	ASTNode t1;
 }
 {
-		( t1 = BoolAdd() <EL> { return t1; } | <EOF> { return null; } )
+	( t1 = Expression() <EL> { return t1; } | <EOF> { return null; } )
+}
+
+ASTNode Expression():
+{
+    ASTNode t1, t2;
+}
+{
+    t1=Assignment() (<SEQ> t2=Assignment() { t1 = new ASTSequence(t1,t2); } )*
+    { return t1; }
+}
+
+ASTNode Assignment():
+{
+    ASTNode t1, t2;
+}
+{
+    t1=BoolAdd() (<ASSIGN> t2=BoolAdd() { t1 = new ASTAssign(t1,t2); } )*
+    { return t1; }
 }
 
 ASTNode BoolAdd() :
@@ -81,7 +121,7 @@ ASTNode BoolAdd() :
 	ASTNode t1, t2;
 }
 {
-	t1=BoolMult() (<OR> t2=BoolMult() { t1=new ASTBoolAdd(t1, t2); } )*
+	t1=BoolMult() (<OR> t2=BoolMult() { t1 = new ASTBoolAdd(t1, t2); } )*
 	{ return t1; }
 }
 
@@ -90,7 +130,7 @@ ASTNode BoolMult() :
 	ASTNode t1, t2;
 }
 {
-	t1=Relop() (<AND> t2=Relop() { t1=new ASTBoolMult(t1, t2); } )*
+	t1=Relop() (<AND> t2=Relop() { t1 = new ASTBoolMult(t1, t2); } )*
 
 	{ return t1; }
 }
@@ -102,7 +142,7 @@ ASTNode Relop() :
 	Token tok;
 }
 {
-	t1=IntAdd() ( (tok=<GT> | tok=<ST> | tok=<GTE> | tok=<STE> | tok=<IEQ> | tok=<DIF>) t2=IntAdd() { t1=new ASTRelop(t1, tok, t2); } )?
+	t1=IntAdd() ( (tok=<GT> | tok=<ST> | tok=<GTE> | tok=<STE> | tok=<IEQ> | tok=<DIF>) t2=IntAdd() { t1 = new ASTRelop(t1, tok.image, t2); } )?
 
 	{ return t1; }
 }
@@ -113,12 +153,7 @@ ASTNode IntAdd() :
 	Token tok;
 }
 {
-	t1 = Term() ( ( tok=<PLUS> | tok=<MINUS> ) t2=Term() 
-
-		{ t1 = tok.kind == PLUS ? new ASTAdd(t1,t2) : new ASTSub(t1,t2); }
-
-		) *
-
+	t1=Term() ( (tok=<PLUS> | tok=<MINUS>) t2=Term() { t1 = tok.kind==PLUS ? new ASTAdd(t1,t2) : new ASTSub(t1,t2); } )*
 	{ return t1; }
 
 }
@@ -129,14 +164,35 @@ ASTNode Term() :
 	Token tok;
 }
 {
-	t1=Fact() ( ( tok=<MUL> | tok=<DIV> ) t2=Fact()
-
-				{ t1 = tok.kind == MUL ? new ASTMul(t1,t2) : new ASTDiv(t1,t2); }
-
-			) * 
-
+	t1=Unary() ( (tok=<MUL> | tok=<DIV>) t2=Unary() { t1 = tok.kind == MUL ? new ASTMul(t1,t2) : new ASTDiv(t1,t2); } )* 
 	{ return t1; }  
 		
+}
+
+ASTNode Unary() :
+{
+	ASTNode t1;
+	Token tok;
+}
+{
+	( 
+		<TRUE> { t1 = new ASTBool(true); } |
+		<FALSE> { t1 = new ASTBool(false); } |
+		tok=<Num> { t1 = new ASTNum(Integer.parseInt(tok.image)); } | 
+		<LPAR> t1=Expression() <RPAR> |
+		<MINUS> t1=Unary() { t1 = new ASTUminus(t1); } |
+		<NOT> t1=Unary() { t1 = new ASTNot(t1); } |
+		tok = <Id> { t1 = new ASTId(tok.image); } |
+		<NEW> t1=Unary() { t1 = new ASTNew(t1); } |
+        <DEREF> t1=Unary() { t1 = new ASTDeref(t1); } |
+        <PRINT> t1=Unary() { t1 = new ASTPrint(t1); } |
+
+		t1 = Def() |
+        t1 = Selection() |
+        t1 = Iteration()
+	)   
+	
+	{ return t1; }   
 }
 
 ASTNode Def() :
@@ -147,37 +203,25 @@ ASTNode Def() :
 }
 {
 	(
-		<DEF> (tok=<Id> <EQ> t1=BoolAdd() { m.put(tok.image, t1); } )+ <IN> (<EL>)* tf=BoolAdd() (<EL>)* <END>
+		<DEF> (tok=<Id> <EQ> t1=Expression() { m.put(tok.image, t1); } )+ <IN> (<EL>)* tf=Expression() (<EL>)* <END>
 	)
 	{ return new ASTDef(m, tf); }
 }
 
-ASTNode Fact() :
+ASTNode Selection() :
 {
-	ASTNode t1;
-	ASTNode tf;
-	Token tok;
+    ASTNode cond, t1, t2;
 }
 {
-	( 
-		tok=<Num> { t1 = new ASTNum(Integer.parseInt(tok.image)); } | 
-		<LPAR> t1=BoolAdd() <RPAR> |
-		<MINUS> t1=Fact() { t1 = new ASTUminus(t1); } |
-		tok = <Id> { t1 = new ASTId(tok.image); } |
-		t1 = Def()
-	)   
-	
-	{ return t1; }   
+    <IF> cond=Expression() <THEN> t1=Expression() <ELSE> t2=Expression() <END> { t1 = new ASTIf(cond, t1, t2); }
+    { return t1; }
 }
 
-/*
-ASTNode Ternary() :
+ASTNode Iteration() :
 {
-	ASTNode cond, t1 = null, t2;
+    ASTNode cond, t1;
 }
 {
-	cond = BoolAdd() ( <QM> t1=BoolAdd() <COL> t2=BoolAdd() { t1 = new ASTTernaryOperator(cond, t1, t2); }
-
-	{ return t1; }
+    <WHILE> cond=Expression() <DO> t1=Expression() <END> { t1 = new ASTWhile(cond, t1); }
+    { return t1; }
 }
-*/

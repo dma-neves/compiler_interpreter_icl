@@ -1,13 +1,13 @@
+import types.BoolVal;
 import types.IValue;
-import types.IntVal;
 
-public class ASTNum implements ASTNode {
+public class ASTBool implements ASTNode {
 
-    int val;
+    boolean val;
 
     public IValue eval(Environment<IValue> env) {
 
-        return new IntVal(val);
+        return new BoolVal(val);
     }
 
     public void compile(CodeBlock cb, Environment<Integer[]> env) {
@@ -15,7 +15,7 @@ public class ASTNum implements ASTNode {
         cb.emit("sipush " + val);
     }
 
-    public ASTNum(int n) {
+    public ASTBool(boolean n) {
         val = n;
     }
 

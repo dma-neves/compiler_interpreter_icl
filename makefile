@@ -14,8 +14,6 @@ compile:
 clean:
 	-rm *Parse*.java
 	-rm *Token*.java
-	# -rm ICLInterpreterConstants.java
 	-rm SimpleCharStream.java
-	# -rm *.class
 	-find . -name "*.class" -type f -delete
 	-rm *.j

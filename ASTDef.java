@@ -2,6 +2,7 @@ import java.util.*;
 
 import exceptions.InterpreterException;
 import exceptions.InvalidTypeException;
+import types.IValue;
 
 public class ASTDef implements ASTNode{
 
@@ -35,10 +36,8 @@ public class ASTDef implements ASTNode{
     public void compile(CodeBlock cb, Environment<Integer[]> env) throws Exception {
 
         Frame currentFrame = cb.getFrame(env);
-        if(currentFrame == null) {
-            //currentFrame = cb.newFrame(env);
+        if(currentFrame == null)
             currentFrame = new Frame();
-        }
 
         env = env.beginScope();
         Frame newFrame = cb.newFrame(env, currentFrame);

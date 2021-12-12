@@ -1,3 +1,5 @@
+package types;
+
 public class BoolVal implements IValue {
     
     boolean val;

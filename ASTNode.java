@@ -1,5 +1,6 @@
 import exceptions.InterpreterException;
 import exceptions.InvalidTypeException;
+import types.IValue;
 
 public interface ASTNode {
 

@@ -1,5 +1,7 @@
 import exceptions.InterpreterException;
 import exceptions.InvalidTypeException;
+import types.BoolVal;
+import types.IValue;
 
 public class ASTTernaryOperator implements ASTNode {
 
@@ -12,7 +14,7 @@ public class ASTTernaryOperator implements ASTNode {
         if(! (cval instanceof BoolVal) )
             throw new InvalidTypeException("Invalid type while evaluating ternary operator");
 
-        boolean t = ( (BoolVal)cval ).val;
+        boolean t = ( (BoolVal)cval ).getVal();
 
         return t ? option_a.eval(env) : option_b.eval(env);
     }

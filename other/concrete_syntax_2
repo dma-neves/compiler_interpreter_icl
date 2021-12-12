@@ -1,0 +1,21 @@
+BoolAdd -> BoolMul (|| BoolMul)*
+BoolMul -> Relop (&& Relop)*
+Relop -> IntAdd ( ( < | > | == | ... ) Relop )*
+IntAdd -> Term ( ( + | - ) Term )*
+Term -> Unary ( ( <MULT> | <DIV> ) Unary)*
+Unary ->
+    num |
+    id |
+    true | false |
+    <LPAR> BoolAdd <RPAR> |
+    -Unary | ~Unary |
+    !Unary |
+    print Unary |
+    new Unary |
+    def ( (id = BoolAdd)+ in BoolAdd end |
+    if BoolAdd then Sequence else Sequence end |
+    while BoolAdd do Sequence end
+
+Assignment -> BoolAdd (:= BoolAdd)*
+
+Sequence -> Assignment (; Assignment)*

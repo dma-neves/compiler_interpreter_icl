@@ -1,9 +1,9 @@
 import exceptions.InterpreterException;
 import exceptions.InvalidTypeException;
+import types.BoolVal;
 import types.IValue;
-import types.IntVal;
 
-public class ASTUminus implements ASTNode {
+public class ASTNot implements ASTNode {
 
     ASTNode n;
 
@@ -11,12 +11,12 @@ public class ASTUminus implements ASTNode {
 
         IValue val = n.eval(env);
 
-        if(!(val instanceof IntVal))
+        if(!(val instanceof BoolVal))
             throw new InvalidTypeException("Invalid type while performing minus operation");
 
-        IntVal val_int = (IntVal)val;
+        BoolVal bool_val = (BoolVal)val;
 
-        return new IntVal( -val_int.getVal() );
+        return new BoolVal( !bool_val.getVal() );
     }
 
     public void compile(CodeBlock cb, Environment<Integer[]> env) throws Exception {
@@ -25,7 +25,7 @@ public class ASTUminus implements ASTNode {
         cb.emit("ineg");
 }
 
-    public ASTUminus(ASTNode n) {
+    public ASTNot(ASTNode n) {
         this.n = n;
     }
 

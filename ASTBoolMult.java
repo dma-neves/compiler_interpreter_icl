@@ -1,5 +1,7 @@
 import exceptions.InterpreterException;
 import exceptions.InvalidTypeException;
+import types.BoolVal;
+import types.IValue;
 
 public class ASTBoolMult implements ASTNode {
 

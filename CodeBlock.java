@@ -40,12 +40,12 @@ public class CodeBlock {
         return f;
     }
 
-    public Frame newFrame(Environment<Integer[]> env) {
+    // public Frame newFrame(Environment<Integer[]> env) {
 
-        Frame f = new Frame(frames.size());
-        frames.put(env, f);
-        return f;
-    }
+    //     Frame f = new Frame(frames.size());
+    //     frames.put(env, f);
+    //     return f;
+    // }
 
     public Frame getFrame(Environment<Integer[]> env) {
 
