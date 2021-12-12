@@ -7,15 +7,15 @@ Unary ->
     num |
     id |
     true | false |
-    <LPAR> BoolAdd <RPAR> |
+    <LPAR> Expression <RPAR> |
     -Unary | ~Unary |
     !Unary |
     print Unary |
     new Unary |
-    def ( (id = BoolAdd)+ in BoolAdd end |
-    if BoolAdd then Sequence else Sequence end |
-    while BoolAdd do Sequence end
+    def ( (id = Expression)+ in Expression end |
+    if Expression then Expression else Expression end |
+    while Expression do Expression end
 
 Assignment -> BoolAdd (:= BoolAdd)*
 
-Sequence -> Assignment (; Assignment)*
+Expression -> Assignment (; Assignment)*

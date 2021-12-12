@@ -1,0 +1,19 @@
+SOURCE = source_1
+
+all: clean compile
+	
+runc:
+	java ICLCompiler programs/$(SOURCE).icl
+	java $(SOURCE)
+
+compile:
+	javacc Parser0.jj
+	javac ICLInterpreter.java
+	javac ICLCompiler.java
+
+clean:
+	-rm *Parse*.java
+	-rm *Token*.java
+	-rm SimpleCharStream.java
+	-find . -name "*.class" -type f -delete
+	-rm *.j
