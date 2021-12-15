@@ -34,7 +34,7 @@ public class ASTNot implements ASTNode {
         return new BoolVal( !bool_val.getVal() );
     }
 
-    public void compile(CodeBlock cb, Environment<Integer[]> env) throws Exception {
+    public void compile(CodeBlock cb, Environment<Integer[]> env) throws CompilerException {
 
         n.compile(cb, env);
         cb.emit("ineg");

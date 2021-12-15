@@ -1,13 +1,13 @@
-PARSER_BEGIN(Parser0)
+PARSER_BEGIN(ICLParser)
 
 import ast.*;
 import java.util.*;
 
 /** ID lister. */
-public class Parser0 {
+public class ICLParser {
 }
 
-PARSER_END(Parser0)
+PARSER_END(ICLParser)
 
 SKIP :
 {

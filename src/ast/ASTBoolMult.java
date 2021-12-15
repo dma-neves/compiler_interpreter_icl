@@ -38,7 +38,7 @@ public class ASTBoolMult implements ASTNode {
         return new BoolVal(v1_bool.getVal() && v2_bool.getVal());
     }
 
-    public void compile(CodeBlock cb, Environment<Integer[]> env) throws Exception {
+    public void compile(CodeBlock cb, Environment<Integer[]> env) throws CompilerException {
 
         lhs.compile(cb, env);
         rhs.compile(cb, env);

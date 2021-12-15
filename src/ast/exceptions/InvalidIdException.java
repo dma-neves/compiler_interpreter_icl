@@ -1,6 +1,6 @@
 package ast.exceptions;
 
-public class InvalidIdException extends InterpreterException {
+public class InvalidIdException extends Exception {
 
     public InvalidIdException(String message) {
 

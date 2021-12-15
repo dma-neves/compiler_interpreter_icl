@@ -19,19 +19,30 @@ public class ASTId implements ASTNode {
 		try {
 			return env.find(id);
 		} 
-		catch (InterpreterException e) {
+		catch (InvalidIdException e) {
 			throw new InvalidTypeException("Referencing undefined ID");
 		}
 	}
 
 	public IValue eval(Environment<IValue> env) throws InterpreterException {
 		
-		return env.find(id);
+		try {
+			return env.find(id);
+		} 
+		catch (InvalidIdException e) {
+			throw new InterpreterException(e.getMessage());
+		}
 	}
 
-	public void compile(CodeBlock cb, Environment<Integer[]> env) throws Exception {
+	public void compile(CodeBlock cb, Environment<Integer[]> env) throws CompilerException {
 		
-		Integer[] coordinates = env.find(id);
+		Integer[] coordinates;
+		try {
+			coordinates = env.find(id);
+		}
+		catch (InvalidIdException e) {
+			throw new CompilerException(e.getMessage());
+		}
 
 		int depth = coordinates[0].intValue();
 		int slot = coordinates[1].intValue();

@@ -3,6 +3,7 @@ package ast;
 import ast.exceptions.*;
 import ast.types.BoolType;
 import ast.types.IType;
+import ast.types.IntType;
 import ast.values.*;
 
 public class ASTRelop implements ASTNode {
@@ -27,10 +28,10 @@ public class ASTRelop implements ASTNode {
         
         if(op.equals("==") || op.equals("~=")) {
 
-            if(!(tl instanceof BoolVal) && !(tl instanceof IntVal))
+            if(!(tl instanceof BoolType) && !(tl instanceof IntType))
                 throw new InvalidTypeException("TODO");
         }
-        else if(!(tl instanceof IntVal))
+        else if(!(tl instanceof IntType))
             throw new InvalidTypeException("TODO");
 
         return new BoolType();
@@ -71,7 +72,7 @@ public class ASTRelop implements ASTNode {
         throw new InterpreterException("Invalid token");
     }
 
-    public void compile(CodeBlock cb, Environment<Integer[]> env) throws Exception {
+    public void compile(CodeBlock cb, Environment<Integer[]> env) throws CompilerException {
 
         // TODO
     }

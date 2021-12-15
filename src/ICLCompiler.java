@@ -1,10 +1,10 @@
 import java.io.*;
 import java.lang.Runtime;
-import java.lang.ProcessBuilder.Redirect;
 import java.lang.Process;
 
 import ast.*;
 import ast.exceptions.*;
+import ast.types.IType;
 
 public class ICLCompiler {
 
@@ -29,34 +29,41 @@ public class ICLCompiler {
 
 
     /** Main entry point. */
-    public static void main(String args[]) {
+    public static void main(String args[]) throws FileNotFoundException {
 
         if(args.length != 1) {
 
             System.out.println("usage: ICLCompiler sourceFile.icl");
+            System.exit(1);
         }
-        else {
 
-            try {
+        String iclFile = args[0];
+        ICLParser parser = new ICLParser(new FileInputStream(new File(iclFile)));
+        CodeBlock cb = new CodeBlock();
 
-                Parser0 parser = new Parser0(new FileInputStream(new File(args[0])));
-                CodeBlock cb = new CodeBlock();
+        try {
 
-                ASTNode ast = parser.Start();
-                ast.compile(cb, new Environment<Integer[]>());
+            ASTNode ast = parser.Start();
+            ast.typecheck(new ast.Environment<IType>());
+            ast.compile(cb, new Environment<Integer[]>());
 
-                String iclFile = args[0];
-                String name = iclFile.substring( iclFile.lastIndexOf("/")+1, iclFile.lastIndexOf(".") );
+            String name = iclFile.substring( iclFile.lastIndexOf("/")+1, iclFile.lastIndexOf(".") );
+            String mainFile = name + ".j";
+            dump(cb, mainFile, name);
+            assemble(mainFile, cb.frameFiles());
+        }
+        catch(ParseException e) {
+            System.out.println("Syntax error: " + e.getMessage());
+            parser.ReInit(System.in);
+        }
+        catch(InvalidTypeException e) {
 
-                String mainFile = name + ".j";
-                dump(cb, mainFile, name);
-                assemble(mainFile, cb.frameFiles());
-            } 
-            catch (Exception e) {
-
-                e.printStackTrace();
-                System.out.println("Syntax Error!");
-            }
+            System.out.println("Type error: " + e.getMessage());
+            parser.ReInit(System.in);
+        }
+        catch (CompilerException e) {
+            System.out.println("Syntax error: " + e.getMessage());
+            parser.ReInit(System.in);
         }
     }
 

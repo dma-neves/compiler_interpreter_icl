@@ -33,7 +33,7 @@ public class ASTUminus implements ASTNode {
         return new IntVal( -val_int.getVal() );
     }
 
-    public void compile(CodeBlock cb, Environment<Integer[]> env) throws Exception {
+    public void compile(CodeBlock cb, Environment<Integer[]> env) throws CompilerException {
 
         n.compile(cb, env);
         cb.emit("ineg");

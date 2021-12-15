@@ -7,7 +7,7 @@ runc:
 	java $(SOURCE)
 
 compile:
-	javacc Parser0.jj
+	javacc ICLParser.jj
 	javac ICLInterpreter.java
 	javac ICLCompiler.java
 

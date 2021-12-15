@@ -18,8 +18,8 @@ public class ASTMul implements ASTNode {
         IType t1 = lhs.typecheck(env);
         IType t2 = rhs.typecheck(env);
 
-        if(t1.equals(t2) || !(t1 instanceof IntType))
-            throw new InvalidTypeException("Bool Mult Error: Expected BoolVal");
+        if(!t1.equals(t2) || !(t1 instanceof IntType))
+            throw new InvalidTypeException("TODO");
 
         return new IntType();
     }
@@ -37,7 +37,7 @@ public class ASTMul implements ASTNode {
         return new IntVal(v1_int.getVal() * v2_int.getVal());
     }
 
-    public void compile(CodeBlock cb, Environment<Integer[]> env) throws Exception {
+    public void compile(CodeBlock cb, Environment<Integer[]> env) throws CompilerException {
 
         lhs.compile(cb, env);
         rhs.compile(cb, env);

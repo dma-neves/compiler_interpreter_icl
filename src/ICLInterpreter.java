@@ -1,11 +1,12 @@
 import ast.exceptions.*;
 import ast.*;
+import ast.values.*;
 
 public class ICLInterpreter {
 
     /** Main entry point. */
     public static void main(String args[]) {
-        Parser0 parser = new Parser0(System.in);
+        ICLParser parser = new ICLParser(System.in);
 
         while (true) {
             try {
@@ -15,8 +16,12 @@ public class ICLInterpreter {
                 if (ast == null)
                     System.exit(0);
 
-                //ast.typecheck(new ast.Environment<>());
-                ast.eval(new Environment<>()).print();
+                ast.typecheck(new ast.Environment<>());
+                ast.eval(new Environment<IValue>()).print();
+            }
+            catch(ParseException e) {
+                System.out.println("Syntax error: " + e.getMessage());
+                parser.ReInit(System.in);
             }
             catch(InvalidTypeException e) {
 
@@ -25,10 +30,6 @@ public class ICLInterpreter {
             }
             catch (InterpreterException e) {
                 System.out.println("Syntax error: " + e.getMessage());
-                parser.ReInit(System.in);
-            }
-            catch(ParseException e) {
-                System.out.println("Syntax error");
                 parser.ReInit(System.in);
             }
         }

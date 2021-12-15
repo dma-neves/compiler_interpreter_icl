@@ -34,7 +34,7 @@ public class ASTTernaryOperator implements ASTNode {
     }
 
     @Override
-    public void compile(CodeBlock cb, Environment<Integer[]> env) throws Exception {
+    public void compile(CodeBlock cb, Environment<Integer[]> env) throws CompilerException {
         // TODO Auto-generated method stub
         
     }

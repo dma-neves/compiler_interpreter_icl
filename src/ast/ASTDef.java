@@ -50,7 +50,7 @@ public class ASTDef implements ASTNode{
         return val;    
     }
 
-    public void compile(CodeBlock cb, Environment<Integer[]> env) throws Exception {
+    public void compile(CodeBlock cb, Environment<Integer[]> env) throws CompilerException {
 
         Frame currentFrame = cb.getFrame(env);
         if(currentFrame == null)

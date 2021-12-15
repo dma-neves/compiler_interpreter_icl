@@ -38,7 +38,7 @@ public class ASTAdd implements ASTNode {
         return new IntVal(v1_int.getVal() + v2_int.getVal());
     }
 
-    public void compile(CodeBlock cb, Environment<Integer[]> env) throws Exception {
+    public void compile(CodeBlock cb, Environment<Integer[]> env) throws CompilerException {
 
         lhs.compile(cb, env);
         rhs.compile(cb, env);

@@ -35,7 +35,7 @@ public class Environment<T> {
         associations.put(id, val);
     }
 
-    T find(String id) throws InterpreterException {
+    T find(String id) throws InvalidIdException {
 
         T val = associations.get(id);
         if(val != null)
