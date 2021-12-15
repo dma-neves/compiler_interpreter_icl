@@ -6,4 +6,9 @@ public class InvalidTypeException extends InterpreterException {
 
         super(message);
     }
+
+    public InvalidTypeException() {
+
+        super();
+    }
 }

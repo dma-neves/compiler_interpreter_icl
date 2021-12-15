@@ -1,6 +1,7 @@
 package ast;
 
 import ast.exceptions.*;
+import ast.values.*;
 import ast.types.*;
 
 public class ASTWhile implements ASTNode {
@@ -10,6 +11,14 @@ public class ASTWhile implements ASTNode {
     public ASTWhile(ASTNode cond, ASTNode exp) {
         this.cond = cond;
         this.exp = exp;
+    }
+
+    public IType typecheck(Environment<IType> env) throws InvalidTypeException {
+
+        if( !(cond.typecheck(env) instanceof BoolType))
+            throw new InvalidTypeException("TODO");
+
+        return exp.typecheck(env);
     }
 
     @Override

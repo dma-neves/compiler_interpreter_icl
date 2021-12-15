@@ -1,7 +1,9 @@
 package ast;
 
 import ast.exceptions.*;
-import ast.types.*;
+import ast.types.IType;
+import ast.types.RefType;
+import ast.values.*;
 
 public class ASTDeref implements ASTNode {
 
@@ -10,6 +12,15 @@ public class ASTDeref implements ASTNode {
     public ASTDeref(ASTNode n) {
 
         this.n = n;
+    }
+
+    public IType typecheck(Environment<IType> env) throws InvalidTypeException {
+
+        IType t = n.typecheck(env);
+        if(!(t instanceof RefType))
+            throw new InvalidTypeException("TODO");
+
+        return ( (RefType)t ).getInnerType();
     }
 
     @Override
@@ -28,6 +39,4 @@ public class ASTDeref implements ASTNode {
         // TODO Auto-generated method stub
         
     }
-
-
 }

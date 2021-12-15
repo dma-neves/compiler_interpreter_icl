@@ -1,16 +1,21 @@
 package ast;
 
 import ast.exceptions.*;
-import ast.types.*;
+import ast.types.IType;
+import ast.values.*;
 public class ASTPrint implements ASTNode {
 
     ASTNode exp;
-
 
     public ASTPrint(ASTNode exp) {
         this.exp = exp;
     }
 
+    @Override
+    public IType typecheck(Environment<IType> env) throws InvalidTypeException {
+        
+        return exp.typecheck(env);
+    }
 
     @Override
     public IValue eval(Environment<IValue> env) throws InterpreterException {
@@ -24,6 +29,5 @@ public class ASTPrint implements ASTNode {
     public void compile(CodeBlock cb, Environment<Integer[]> env) throws Exception {
         // TODO Auto-generated method stub
         
-    }
-    
+    }    
 }

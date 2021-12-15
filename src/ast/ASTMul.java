@@ -1,11 +1,28 @@
 package ast;
 
 import ast.exceptions.*;
+import ast.values.*;
 import ast.types.*;
 
 public class ASTMul implements ASTNode {
 
     ASTNode lhs, rhs;
+
+    public ASTMul(ASTNode l, ASTNode r) {
+        lhs = l;
+        rhs = r;
+    }
+
+    public IType typecheck(Environment<IType> env) throws InvalidTypeException {
+
+        IType t1 = lhs.typecheck(env);
+        IType t2 = rhs.typecheck(env);
+
+        if(t1.equals(t2) || !(t1 instanceof IntType))
+            throw new InvalidTypeException("Bool Mult Error: Expected BoolVal");
+
+        return new IntType();
+    }
 
     public IValue eval(Environment<IValue> env) throws InterpreterException {
         IValue v1 = lhs.eval(env);
@@ -25,10 +42,5 @@ public class ASTMul implements ASTNode {
         lhs.compile(cb, env);
         rhs.compile(cb, env);
         cb.emit("imul");
-}
-
-    public ASTMul(ASTNode l, ASTNode r) {
-        lhs = l;
-        rhs = r;
     }
 }

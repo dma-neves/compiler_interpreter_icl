@@ -1,10 +1,27 @@
 package ast;
 
 import ast.exceptions.*;
+import ast.values.*;
 import ast.types.*;
+
 public class ASTSub implements ASTNode {
 
     ASTNode lhs, rhs;
+
+    public ASTSub(ASTNode l, ASTNode r) {
+        lhs = l; rhs = r;
+    }
+
+    public IType typecheck(Environment<IType> env) throws InvalidTypeException {
+
+        IType t1 = lhs.typecheck(env);
+        IType t2 = rhs.typecheck(env);
+
+        if(!t1.equals(t2) || !(t1 instanceof IntType))
+            throw new InvalidTypeException("TODO");
+
+        return new IntType();
+    }
 
     public IValue eval(Environment<IValue> env) throws InterpreterException
     { 
@@ -25,11 +42,6 @@ public class ASTSub implements ASTNode {
         lhs.compile(cb, env);
         rhs.compile(cb, env);
         cb.emit("isub");
-    }
-
-    public ASTSub(ASTNode l, ASTNode r)
-    {
-        lhs = l; rhs = r;
     }
 }
 

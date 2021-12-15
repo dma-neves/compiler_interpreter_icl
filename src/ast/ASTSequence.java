@@ -1,7 +1,8 @@
 package ast;
 
 import ast.exceptions.*;
-import ast.types.*;
+import ast.types.IType;
+import ast.values.*;
 public class ASTSequence implements ASTNode {
 
     ASTNode  lhs, rhs;
@@ -9,6 +10,13 @@ public class ASTSequence implements ASTNode {
     public ASTSequence(ASTNode lhs, ASTNode rhs) {
         this.lhs = lhs;
         this.rhs = rhs;
+    }
+
+    @Override
+    public IType typecheck(Environment<IType> env) throws InvalidTypeException {
+        
+        lhs.typecheck(env);
+        return rhs.typecheck(env);
     }
 
     @Override
@@ -23,5 +31,4 @@ public class ASTSequence implements ASTNode {
         // TODO Auto-generated method stub
         
     }
-    
 }

@@ -1,7 +1,8 @@
 package ast;
 
 import ast.exceptions.*;
-import ast.types.*;
+import ast.types.IType;
+import ast.values.*;
 
 public class ASTId implements ASTNode {
 
@@ -10,6 +11,17 @@ public class ASTId implements ASTNode {
 	public ASTId(String id) {
 
 		this.id = id;
+	}
+
+	@Override
+	public IType typecheck(Environment<IType> env) throws InvalidTypeException {
+
+		try {
+			return env.find(id);
+		} 
+		catch (InterpreterException e) {
+			throw new InvalidTypeException("Referencing undefined ID");
+		}
 	}
 
 	public IValue eval(Environment<IValue> env) throws InterpreterException {
@@ -40,5 +52,4 @@ public class ASTId implements ASTNode {
 
 		cb.emit(String.format("getfield %s/X%d I", targetFrame.id, slot));
 	}
-	
 }

@@ -6,5 +6,9 @@ public class InterpreterException extends Exception {
 
         super(message);
     }
-    
+
+    public InterpreterException() {
+
+        super();
+    }
 }

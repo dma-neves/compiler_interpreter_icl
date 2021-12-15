@@ -1,7 +1,8 @@
 package ast;
 
 import ast.exceptions.*;
-import ast.types.*;
+import ast.types.IType;
+import ast.values.*;
 
 public class ASTNew implements ASTNode {
 
@@ -10,6 +11,12 @@ public class ASTNew implements ASTNode {
     public ASTNew(ASTNode exp) {
 
         this.exp = exp;
+    }
+
+    @Override
+    public IType typecheck(Environment<IType> env) throws InvalidTypeException {
+
+        return exp.typecheck(env);
     }
 
     @Override
@@ -23,6 +30,4 @@ public class ASTNew implements ASTNode {
     public void compile(CodeBlock cb, Environment<Integer[]> env) throws Exception {
         // TODO Auto-generated method stub        
     }
-    
-
 }

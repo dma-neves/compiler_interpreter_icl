@@ -1,4 +1,4 @@
-package ast.types;
+package ast.values;
 
 public class CellVal implements IValue {
 

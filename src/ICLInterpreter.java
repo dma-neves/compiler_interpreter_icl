@@ -15,11 +15,12 @@ public class ICLInterpreter {
                 if (ast == null)
                     System.exit(0);
 
+                //ast.typecheck(new ast.Environment<>());
                 ast.eval(new Environment<>()).print();
             }
             catch(InvalidTypeException e) {
 
-                System.out.println("Type erro: " + e.getMessage());
+                System.out.println("Type error: " + e.getMessage());
                 parser.ReInit(System.in);
             }
             catch (InterpreterException e) {

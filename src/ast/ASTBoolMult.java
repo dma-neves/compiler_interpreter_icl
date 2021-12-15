@@ -1,10 +1,28 @@
 package ast;
 
 import ast.exceptions.*;
-import ast.types.*;
+import ast.types.BoolType;
+import ast.types.IType;
+import ast.values.*;
 public class ASTBoolMult implements ASTNode {
 
     ASTNode lhs, rhs;
+
+    public ASTBoolMult(ASTNode l, ASTNode r) {
+        lhs = l;
+        rhs = r;
+    }
+
+    public IType typecheck(Environment<IType> env) throws InvalidTypeException {
+
+        IType t1 = lhs.typecheck(env);
+        IType t2 = rhs.typecheck(env);
+
+        if(t1.equals(t2) || !(t1 instanceof BoolType))
+            throw new InvalidTypeException("Bool Mult Error: Expected BoolVal");
+
+        return new BoolType();
+    }
 
     public IValue eval(Environment<IValue> env) throws InterpreterException {
 
@@ -12,7 +30,7 @@ public class ASTBoolMult implements ASTNode {
         IValue v2 = rhs.eval(env);
 
         if(!(v1 instanceof BoolVal) || !(v2 instanceof BoolVal))
-            throw new InvalidTypeException("Invalid type while adding");
+            throw new InvalidTypeException("Bool Mult Error: Expected BoolVal");
 
         BoolVal v1_bool = (BoolVal)v1;
         BoolVal v2_bool = (BoolVal)v2;
@@ -25,10 +43,5 @@ public class ASTBoolMult implements ASTNode {
         lhs.compile(cb, env);
         rhs.compile(cb, env);
         cb.emit("iadd");
-    }
-
-    public ASTBoolMult(ASTNode l, ASTNode r) {
-        lhs = l;
-        rhs = r;
     }
 }

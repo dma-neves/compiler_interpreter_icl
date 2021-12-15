@@ -1,11 +1,25 @@
 package ast;
 
 import ast.exceptions.*;
-import ast.types.*;
+import ast.types.IType;
+import ast.values.*;
 
 public class ASTTernaryOperator implements ASTNode {
 
     ASTNode cond, option_a, option_b;
+
+    public ASTTernaryOperator(ASTNode cond, ASTNode option_a, ASTNode option_b) {
+
+        this.cond = cond;
+        this.option_a = option_a;
+        this.option_b = option_b;
+    }    
+
+    @Override
+    public IType typecheck(Environment<IType> env) throws InvalidTypeException {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
     @Override
     public IValue eval(Environment<IValue> env) throws InterpreterException {
@@ -24,12 +38,4 @@ public class ASTTernaryOperator implements ASTNode {
         // TODO Auto-generated method stub
         
     }
-
-    public ASTTernaryOperator(ASTNode cond, ASTNode option_a, ASTNode option_b) {
-
-        this.cond = cond;
-        this.option_a = option_a;
-        this.option_b = option_b;
-    }
-    
 }

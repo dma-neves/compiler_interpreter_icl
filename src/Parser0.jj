@@ -14,6 +14,7 @@ SKIP :
 	" "
 	| "\t"
 	| "\r"
+	| "\n"
 }
 
 TOKEN :
@@ -84,11 +85,11 @@ TOKEN :
 	|
 	< ASSIGN : ":=" >
 	|
-    <DEREF : "!" >
-    |
-    < SEQ : ";" >
-    |
-	< EL: "\n" >
+	<DEREF : "!" >
+	|
+	< ENDP : ";;" >
+	|
+	< SEQ : ";" >
 }
 
 ASTNode Start() :
@@ -96,25 +97,25 @@ ASTNode Start() :
 	ASTNode t1;
 }
 {
-	( t1 = Expression() <EL> { return t1; } | <EOF> { return null; } )
+	( t1 = Expression() <ENDP> { return t1; } | <EOF> { return null; } )
 }
 
 ASTNode Expression():
 {
-    ASTNode t1, t2;
+	ASTNode t1, t2;
 }
 {
-    t1=Assignment() (<SEQ> t2=Assignment() { t1 = new ASTSequence(t1,t2); } )*
-    { return t1; }
+	t1=Assignment() (<SEQ> t2=Assignment() { t1 = new ASTSequence(t1,t2); } )*
+	{ return t1; }
 }
 
 ASTNode Assignment():
 {
-    ASTNode t1, t2;
+	ASTNode t1, t2;
 }
 {
-    t1=BoolAdd() (<ASSIGN> t2=BoolAdd() { t1 = new ASTAssign(t1,t2); } )*
-    { return t1; }
+	t1=BoolAdd() (<ASSIGN> t2=BoolAdd() { t1 = new ASTAssign(t1,t2); } )*
+	{ return t1; }
 }
 
 ASTNode BoolAdd() :
@@ -185,12 +186,12 @@ ASTNode Unary() :
 		<NOT> t1=Unary() { t1 = new ASTNot(t1); } |
 		tok = <Id> { t1 = new ASTId(tok.image); } |
 		<NEW> t1=Unary() { t1 = new ASTNew(t1); } |
-        <DEREF> t1=Unary() { t1 = new ASTDeref(t1); } |
-        <PRINT> t1=Unary() { t1 = new ASTPrint(t1); } |
+		<DEREF> t1=Unary() { t1 = new ASTDeref(t1); } |
+		<PRINT> t1=Unary() { t1 = new ASTPrint(t1); } |
 
 		t1 = Def() |
-        t1 = Selection() |
-        t1 = Iteration()
+		t1 = Selection() |
+		t1 = Iteration()
 	)   
 	
 	{ return t1; }   
@@ -204,25 +205,25 @@ ASTNode Def() :
 }
 {
 	(
-		<DEF> (tok=<Id> <EQ> t1=Expression() { m.put(tok.image, t1); } )+ <IN> (<EL>)* tf=Expression() (<EL>)* <END>
+		<DEF> (tok=<Id> <EQ> t1=Expression() { m.put(tok.image, t1); } )+ <IN> tf=Expression() <END>
 	)
 	{ return new ASTDef(m, tf); }
 }
 
 ASTNode Selection() :
 {
-    ASTNode cond, t1, t2;
+	ASTNode cond, t1, t2;
 }
 {
-    <IF> cond=Expression() <THEN> t1=Expression() <ELSE> t2=Expression() <END> { t1 = new ASTIf(cond, t1, t2); }
-    { return t1; }
+	<IF> cond=Expression() <THEN> t1=Expression() <ELSE> t2=Expression() <END> { t1 = new ASTIf(cond, t1, t2); }
+	{ return t1; }
 }
 
 ASTNode Iteration() :
 {
-    ASTNode cond, t1;
+	ASTNode cond, t1;
 }
 {
-    <WHILE> cond=Expression() <DO> t1=Expression() <END> { t1 = new ASTWhile(cond, t1); }
-    { return t1; }
+	<WHILE> cond=Expression() <DO> t1=Expression() <END> { t1 = new ASTWhile(cond, t1); }
+	{ return t1; }
 }

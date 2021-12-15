@@ -3,7 +3,8 @@ package ast;
 import java.util.Map;
 
 import ast.exceptions.*;
-import ast.types.*;
+import ast.types.IType;
+import ast.values.*;
 
 public class ASTDef implements ASTNode{
 
@@ -14,6 +15,21 @@ public class ASTDef implements ASTNode{
 
         this.assignments = assignments;
         this.exp = exp;
+    }
+
+    public IType typecheck(Environment<IType> env) throws InvalidTypeException {
+
+        env = env.beginScope();
+
+        for(java.util.Map.Entry<String, ASTNode> assignment : assignments.entrySet()) {
+
+            env.assoc(assignment.getKey() , assignment.getValue().typecheck(env));
+        }
+
+        IType t = exp.typecheck(env);
+        env = env.endScope();
+
+        return t;
     }
 
     public IValue eval(Environment<IValue> env) throws InterpreterException {
