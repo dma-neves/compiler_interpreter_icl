@@ -15,5 +15,5 @@ def num = 5 i = new 2 res = new 1 in
 
     print !res
 
-end
+end;;
 ```
