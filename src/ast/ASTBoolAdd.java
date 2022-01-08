@@ -43,6 +43,6 @@ public class ASTBoolAdd implements ASTNode {
 
         lhs.compile(cb, env);
         rhs.compile(cb, env);
-        cb.emit("iadd");
+        cb.emit("ior");
     }
 }

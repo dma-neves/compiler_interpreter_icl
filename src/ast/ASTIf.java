@@ -42,7 +42,16 @@ public class ASTIf implements  ASTNode {
 
     @Override
     public void compile(CodeBlock cb, Environment<Integer[]> env) throws CompilerException {
-        // TODO Auto-generated method stub
-        
+
+        String l1 = LabelGenerator.next();
+        String l2 = LabelGenerator.next();
+
+        cond.compile(cb, env);
+        cb.emit("ifeq " + l1);
+        exp_a.compile(cb, env);
+        cb.emit("goto " + l2);
+        cb.emit(l1 + ":");
+        exp_b.compile(cb, env);
+        cb.emit(l2 + ":");
     }
 }

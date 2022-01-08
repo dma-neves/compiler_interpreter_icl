@@ -74,6 +74,44 @@ public class ASTRelop implements ASTNode {
 
     public void compile(CodeBlock cb, Environment<Integer[]> env) throws CompilerException {
 
-        // TODO
+        String l1 = LabelGenerator.next();
+        String l2 = LabelGenerator.next();
+
+        lhs.compile(cb, env);
+        rhs.compile(cb, env);
+        cb.emit("isub");
+
+        switch(op) {
+
+            case ">":
+                cb.emit("ifgt " + l1);
+                break;
+
+            case "<":
+                cb.emit("iflt " + l1);
+                break;
+
+            case "==":
+                cb.emit("ifeq " + l1);
+                break;
+
+            case "~=":
+                cb.emit("ifne " + l1);
+                break;
+
+            case ">=":
+                cb.emit("ifge " + l1);
+                break;
+
+            case "<=":
+                cb.emit("ifle " + l1);
+                break;
+        }
+
+        cb.emit("sipush 0");
+        cb.emit("goto " + l2);
+        cb.emit(l1 + ":");
+        cb.emit("sipush 1");
+        cb.emit(l2 + ":");
     }
 }

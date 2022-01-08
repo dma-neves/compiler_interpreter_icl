@@ -24,7 +24,7 @@ public class ASTBool implements ASTNode {
 
     public void compile(CodeBlock cb, Environment<Integer[]> env) {
 
-        cb.emit("sipush " + val);
+        cb.emit("sipush " + (val ? 1 : 0));
     }
 
 

@@ -201,7 +201,7 @@ ASTNode Def() :
 {
 	ASTNode t1, tf;
 	Token tok;
-	Map<String, ASTNode> m = new HashMap<>();
+	Map<String, ASTNode> m = new HashMap<String,ASTNode>();
 }
 {
 	(

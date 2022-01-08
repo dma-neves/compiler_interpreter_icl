@@ -45,7 +45,16 @@ public class ASTWhile implements ASTNode {
 
     @Override
     public void compile(CodeBlock cb, Environment<Integer[]> env) throws CompilerException {
-        // TODO Auto-generated method stub
         
+        String l1 = LabelGenerator.next();
+        String l2 = LabelGenerator.next();
+
+        cb.emit(l1 + ":");
+        cond.compile(cb, env);
+        cb.emit("ifeq " + l2);
+        exp.compile(cb, env);
+        cb.emit("pop");
+        cb.emit("goto " + l1);
+        cb.emit(l2 + ":");
     }
 }

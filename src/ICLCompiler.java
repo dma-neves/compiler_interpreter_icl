@@ -87,6 +87,7 @@ public class ICLCompiler {
         try {
 
             String cmd = "java -jar jasmin.jar " + mainFile + frameFiles;
+            System.out.println("Running: " + cmd);
 
             Runtime run = Runtime.getRuntime();
             Process pr = run.exec(cmd);

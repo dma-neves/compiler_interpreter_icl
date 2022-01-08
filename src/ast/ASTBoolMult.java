@@ -18,7 +18,7 @@ public class ASTBoolMult implements ASTNode {
         IType t1 = lhs.typecheck(env);
         IType t2 = rhs.typecheck(env);
 
-        if(t1.equals(t2) || !(t1 instanceof BoolType))
+        if(!t1.equals(t2) || !(t1 instanceof BoolType))
             throw new InvalidTypeException("Bool Mult Error: Expected BoolVal");
 
         return new BoolType();
@@ -42,6 +42,6 @@ public class ASTBoolMult implements ASTNode {
 
         lhs.compile(cb, env);
         rhs.compile(cb, env);
-        cb.emit("iadd");
+        cb.emit("iand");
     }
 }

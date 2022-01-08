@@ -1,9 +1,9 @@
-SOURCE = source_1
+SOURCE = source_5
 
 all: clean compile
 	
 runc:
-	java ICLCompiler programs/$(SOURCE).icl
+	java ICLCompiler ../programs/$(SOURCE).icl
 	java $(SOURCE)
 
 compile:
