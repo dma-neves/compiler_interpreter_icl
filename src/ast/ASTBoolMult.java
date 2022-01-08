@@ -4,7 +4,7 @@ import ast.exceptions.*;
 import ast.types.BoolType;
 import ast.types.IType;
 import ast.values.*;
-public class ASTBoolMult implements ASTNode {
+public class ASTBoolMult implements ASTNodeSC {
 
     ASTNode lhs, rhs;
 
@@ -43,5 +43,18 @@ public class ASTBoolMult implements ASTNode {
         lhs.compile(cb, env);
         rhs.compile(cb, env);
         cb.emit("iand");
+    }
+
+    @Override
+    public void compileShortCircuit(CodeBlock cb, Environment<Integer[]> env, String tl, String fl) throws CompilerException {
+        
+        // TODO: Remove
+        if(!(lhs instanceof ASTNodeSC))
+            System.out.println("NOT A ASTNodeSC (BoolMult)");
+
+        String auxLabel = LabelGenerator.next();
+        ( (ASTNodeSC)lhs ).compileShortCircuit(cb, env, auxLabel, fl);
+        cb.emit(auxLabel + ":");
+        ( (ASTNodeSC)rhs ).compileShortCircuit(cb, env, tl, fl);
     }
 }

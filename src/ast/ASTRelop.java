@@ -6,7 +6,7 @@ import ast.types.IType;
 import ast.types.IntType;
 import ast.values.*;
 
-public class ASTRelop implements ASTNode {
+public class ASTRelop implements ASTNodeSC {
 
     ASTNode lhs, rhs;
     String op;
@@ -82,30 +82,18 @@ public class ASTRelop implements ASTNode {
         cb.emit("isub");
 
         switch(op) {
-
             case ">":
-                cb.emit("ifgt " + l1);
-                break;
-
+                cb.emit("ifgt " + l1); break;
             case "<":
-                cb.emit("iflt " + l1);
-                break;
-
+                cb.emit("iflt " + l1); break;
             case "==":
-                cb.emit("ifeq " + l1);
-                break;
-
+                cb.emit("ifeq " + l1); break;
             case "~=":
-                cb.emit("ifne " + l1);
-                break;
-
+                cb.emit("ifne " + l1); break;
             case ">=":
-                cb.emit("ifge " + l1);
-                break;
-
+                cb.emit("ifge " + l1); break;
             case "<=":
-                cb.emit("ifle " + l1);
-                break;
+                cb.emit("ifle " + l1); break;
         }
 
         cb.emit("sipush 0");
@@ -113,5 +101,31 @@ public class ASTRelop implements ASTNode {
         cb.emit(l1 + ":");
         cb.emit("sipush 1");
         cb.emit(l2 + ":");
+    }
+
+    @Override
+    public void compileShortCircuit(CodeBlock cb, Environment<Integer[]> env, String tl, String fl) throws CompilerException {
+
+        lhs.compile(cb, env);
+        rhs.compile(cb, env);
+        cb.emit("isub");        
+
+
+        switch(op) {
+            case ">":
+                cb.emit("ifgt " + tl); break;
+            case "<":
+                cb.emit("iflt " + tl); break;
+            case "==":
+                cb.emit("ifeq " + tl); break;
+            case "~=":
+                cb.emit("ifne " + tl); break;
+            case ">=":
+                cb.emit("ifge " + tl); break;
+            case "<=":
+                cb.emit("ifle " + tl); break;
+        }
+
+        cb.emit("goto " + fl);
     }
 }

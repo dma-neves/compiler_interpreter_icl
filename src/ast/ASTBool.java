@@ -1,10 +1,11 @@
 package ast;
 
+import ast.exceptions.CompilerException;
 import ast.exceptions.InvalidTypeException;
 import ast.values.*;
 import ast.types.*;
 
-public class ASTBool implements ASTNode {
+public class ASTBool implements ASTNodeSC {
 
     boolean val;
 
@@ -25,6 +26,12 @@ public class ASTBool implements ASTNode {
     public void compile(CodeBlock cb, Environment<Integer[]> env) {
 
         cb.emit("sipush " + (val ? 1 : 0));
+    }
+
+    @Override
+    public void compileShortCircuit(CodeBlock cb, Environment<Integer[]> env, String tl, String fl) throws CompilerException {
+        
+        cb.emit("goto " + (val ? tl : fl));    
     }
 
 

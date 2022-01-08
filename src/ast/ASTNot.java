@@ -5,7 +5,7 @@ import ast.types.BoolType;
 import ast.types.IType;
 import ast.values.*;
 
-public class ASTNot implements ASTNode {
+public class ASTNot implements ASTNodeSC {
 
     ASTNode n;
 
@@ -38,5 +38,15 @@ public class ASTNot implements ASTNode {
 
         n.compile(cb, env);
         cb.emit("ineg");
+    }
+
+    @Override
+    public void compileShortCircuit(CodeBlock cb, Environment<Integer[]> env, String tl, String fl) throws CompilerException {
+        
+        // TODO: Remove
+        if(!(n instanceof ASTNodeSC))
+            System.out.println("NOT A ASTNodeSC (Not)");
+
+        ( (ASTNodeSC)n ).compileShortCircuit(cb, env, fl, tl);
     }
 }

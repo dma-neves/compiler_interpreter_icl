@@ -45,7 +45,10 @@ public class ASTWhile implements ASTNode {
 
     @Override
     public void compile(CodeBlock cb, Environment<Integer[]> env) throws CompilerException {
-        
+
+        /* ------- implementation without short circuit ------- */
+
+        /*
         String l1 = LabelGenerator.next();
         String l2 = LabelGenerator.next();
 
@@ -56,5 +59,24 @@ public class ASTWhile implements ASTNode {
         cb.emit("pop");
         cb.emit("goto " + l1);
         cb.emit(l2 + ":");
+        */
+
+        /* ------- implementation with short circuit ------- */
+
+        String sl = LabelGenerator.next(); // Start label
+        String tl = LabelGenerator.next(); // true label
+        String fl = LabelGenerator.next(); // false label
+
+        // TODO: Remove
+        if(!(cond instanceof ASTNodeSC))
+            System.out.println("NOT A ASTNodeSC (While)");
+        
+        cb.emit(sl + ":");
+        ( (ASTNodeSC)cond ).compileShortCircuit(cb, env, tl, fl);
+        cb.emit(tl + ":");
+        exp.compile(cb, env);
+        cb.emit("pop");
+        cb.emit("goto " + sl);
+        cb.emit(fl + ":");
     }
 }

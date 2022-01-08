@@ -5,7 +5,7 @@ import ast.types.BoolType;
 import ast.types.IType;
 import ast.values.*;
 
-public class ASTBoolAdd implements ASTNode {
+public class ASTBoolAdd implements ASTNodeSC {
 
     ASTNode lhs, rhs;
 
@@ -44,5 +44,18 @@ public class ASTBoolAdd implements ASTNode {
         lhs.compile(cb, env);
         rhs.compile(cb, env);
         cb.emit("ior");
+    }
+
+    @Override
+    public void compileShortCircuit(CodeBlock cb, Environment<Integer[]> env, String tl, String fl) throws CompilerException {
+        
+        // TODO: Remove
+        if(!(lhs instanceof ASTNodeSC))
+            System.out.println("NOT A ASTNodeSC (BoolAdd)");
+
+        String auxLabel = LabelGenerator.next();
+        ( (ASTNodeSC)lhs ).compileShortCircuit(cb, env, tl, auxLabel);
+        cb.emit(auxLabel + ":");
+        ( (ASTNodeSC)rhs ).compileShortCircuit(cb, env, tl, fl);
     }
 }
