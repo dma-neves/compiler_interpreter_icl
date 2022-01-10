@@ -20,7 +20,7 @@ public class ASTDiv implements ASTNode {
         IType t1 = lhs.typecheck(env);
         IType t2 = rhs.typecheck(env);
 
-        if(t1.equals(t2) || !(t1 instanceof IntType))
+        if(!t1.equals(t2) || !(t1 instanceof IntType))
             throw new InvalidTypeException("Bool Mult Error: Expected BoolVal");
 
         return new IntType();

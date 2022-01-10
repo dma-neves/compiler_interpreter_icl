@@ -5,7 +5,7 @@ import ast.types.IType;
 import ast.types.RefType;
 import ast.values.*;
 
-public class ASTDeref implements ASTNode {
+public class ASTDeref implements ASTNodeSC {
 
     ASTNode exp;
     RefType expRefType;
@@ -43,5 +43,13 @@ public class ASTDeref implements ASTNode {
 
         ReferenceCell rc = cb.getRefCell(expRefType);
         cb.emit(String.format("getfield %s/%s %s", rc.JVMId, rc.valueName, rc.valueJVMType));
+    }
+
+    @Override
+    public void compileShortCircuit(CodeBlock cb, Environment<SStackLocation> env, String tl, String fl) throws CompilerException {
+        
+        compile(cb, env);
+        cb.emit("ifeq " + fl);
+        cb.emit("goto " + tl);
     }
 }

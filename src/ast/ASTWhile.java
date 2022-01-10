@@ -4,7 +4,7 @@ import ast.exceptions.*;
 import ast.values.*;
 import ast.types.*;
 
-public class ASTWhile implements ASTNode {
+public class ASTWhile implements ASTNodeSC {
 
     ASTNode cond, exp;
 
@@ -46,7 +46,7 @@ public class ASTWhile implements ASTNode {
     @Override
     public void compile(CodeBlock cb, Environment<SStackLocation> env) throws CompilerException {
 
-        /* ------- implementation without short circuit ------- */
+        /* ------- implementation without short circuit for condition ------- */
 
         /*
         String l1 = LabelGenerator.next();
@@ -61,7 +61,7 @@ public class ASTWhile implements ASTNode {
         cb.emit(l2 + ":");
         */
 
-        /* ------- implementation with short circuit ------- */
+        /* ------- implementation with short circuit for condition ------- */
 
         String sl = LabelGenerator.next(); // Start label
         String tl = LabelGenerator.next(); // true label
@@ -79,5 +79,13 @@ public class ASTWhile implements ASTNode {
         cb.emit("goto " + sl);
         cb.emit(fl + ":");
         cb.emit("sipush 0"); // TODO: improve
+    }
+
+    @Override
+    public void compileShortCircuit(CodeBlock cb, Environment<SStackLocation> env, String tl, String fl) throws CompilerException {
+
+        compile(cb, env);
+        cb.emit("ifeq " + fl);
+        cb.emit("goto " + tl);    
     }
 }

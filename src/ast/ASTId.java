@@ -4,7 +4,7 @@ import ast.exceptions.*;
 import ast.types.IType;
 import ast.values.*;
 
-public class ASTId implements ASTNode {
+public class ASTId implements ASTNodeSC {
 
 	String id;
 
@@ -59,5 +59,13 @@ public class ASTId implements ASTNode {
 		}
 
 		cb.emit(String.format("getfield %s/%s %s", targetFrame.JVMId, location.slot.name, location.slot.JVMType));
+	}
+
+	@Override
+	public void compileShortCircuit(CodeBlock cb, Environment<SStackLocation> env, String tl, String fl) throws CompilerException {
+        
+		compile(cb, env);
+        cb.emit("ifeq " + fl);
+        cb.emit("goto " + tl);
 	}
 }

@@ -7,7 +7,7 @@ import ast.exceptions.*;
 import ast.types.IType;
 import ast.values.*;
 
-public class ASTDef implements ASTNode{
+public class ASTDef implements ASTNodeSC {
 
     Map<String, ASTNode> definitions;
     Map<ASTNode, IType> definitionTypes = new HashMap<>();
@@ -95,5 +95,13 @@ public class ASTDef implements ASTNode{
         cb.emit(CodeBlock.STORE_SL);
 
         env = env.endScope();
+    }
+
+    @Override
+    public void compileShortCircuit(CodeBlock cb, Environment<SStackLocation> env, String tl, String fl) throws CompilerException {
+
+        compile(cb, env);
+        cb.emit("ifeq " + fl);
+        cb.emit("goto " + tl);
     }
 }

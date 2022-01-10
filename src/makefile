@@ -1,4 +1,4 @@
-SOURCE = factorial
+SOURCE = prime
 
 all: clean compile
 	

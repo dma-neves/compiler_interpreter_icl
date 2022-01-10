@@ -3,7 +3,7 @@ package ast;
 import ast.exceptions.*;
 import ast.types.IType;
 import ast.values.*;
-public class ASTSequence implements ASTNode {
+public class ASTSequence implements ASTNodeSC {
 
     ASTNode  lhs, rhs;
 
@@ -32,5 +32,13 @@ public class ASTSequence implements ASTNode {
         lhs.compile(cb, env);
         cb.emit("pop");
         rhs.compile(cb, env);
+    }
+
+    @Override
+    public void compileShortCircuit(CodeBlock cb, Environment<SStackLocation> env, String tl, String fl) throws CompilerException {
+
+        lhs.compile(cb, env);
+        cb.emit("pop");
+        ( (ASTNodeSC)rhs).compileShortCircuit(cb, env, tl, fl); // TODO: Check if correct
     }
 }

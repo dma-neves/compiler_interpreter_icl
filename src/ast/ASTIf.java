@@ -5,7 +5,7 @@ import ast.types.BoolType;
 import ast.types.IType;
 import ast.values.*;
 
-public class ASTIf implements  ASTNode {
+public class ASTIf implements  ASTNodeSC {
 
     ASTNode cond, exp_a, exp_b;
 
@@ -43,7 +43,7 @@ public class ASTIf implements  ASTNode {
     @Override
     public void compile(CodeBlock cb, Environment<SStackLocation> env) throws CompilerException {
 
-        /* ------- implementation without short circuit ------- */
+        /* ------- implementation without short circuit for condition ------- */
 
         /*
         String l1 = LabelGenerator.next();
@@ -58,22 +58,40 @@ public class ASTIf implements  ASTNode {
         cb.emit(l2 + ":");
         */
 
-        /* ------- implementation with short circuit ------- */
+        /* ------- implementation with short circuit for condition ------- */
 
-        String el = LabelGenerator.next(); // exit label
-        String tl = LabelGenerator.next(); // true label
-        String fl = LabelGenerator.next(); // false label
+        String if_el = LabelGenerator.next(); // exit label
+        String if_tl = LabelGenerator.next(); // true label
+        String if_fl = LabelGenerator.next(); // false label
 
         // TODO: Remove
         if(!(cond instanceof ASTNodeSC))
             System.out.println("NOT A ASTNodeSC (While)");
         
-        ( (ASTNodeSC)cond ).compileShortCircuit(cb, env, tl, fl);
-        cb.emit(tl + ":");
+        ( (ASTNodeSC)cond ).compileShortCircuit(cb, env, if_tl, if_fl);
+        cb.emit(if_tl + ":");
         exp_a.compile(cb, env);
-        cb.emit("goto " + el);
-        cb.emit(fl + ":");
+        cb.emit("goto " + if_el);
+        cb.emit(if_fl + ":");
         exp_b.compile(cb, env);
-        cb.emit(el + ":");
+        cb.emit(if_el + ":");
+    }
+
+    @Override
+    public void compileShortCircuit(CodeBlock cb, Environment<SStackLocation> env, String tl, String fl) throws CompilerException {
+
+        // TODO: Repeated code
+
+        String if_el = LabelGenerator.next(); // exit label
+        String if_tl = LabelGenerator.next(); // true label
+        String if_fl = LabelGenerator.next(); // false label
+        
+        ( (ASTNodeSC)cond ).compileShortCircuit(cb, env, if_tl, if_fl);
+        cb.emit(if_tl + ":");
+        ( (ASTNodeSC)exp_a ).compileShortCircuit(cb, env, tl, fl);
+        cb.emit("goto " + if_el);
+        cb.emit(if_fl + ":");
+        ( (ASTNodeSC)exp_b ).compileShortCircuit(cb, env, tl, fl);
+        cb.emit(if_el + ":");
     }
 }
