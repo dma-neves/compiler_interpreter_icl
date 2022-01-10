@@ -1,4 +1,4 @@
-SOURCE = source_5
+SOURCE = factorial
 
 all: clean compile
 	

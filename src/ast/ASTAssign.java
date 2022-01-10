@@ -7,6 +7,7 @@ import ast.types.*;
 public class ASTAssign implements ASTNode {
 
     ASTNode lhs, rhs;
+    RefType lhsRefType;
 
     public ASTAssign(ASTNode lhs, ASTNode rhs) {
 
@@ -22,10 +23,10 @@ public class ASTAssign implements ASTNode {
         if(! (lt instanceof RefType) )
             throw new InvalidTypeException("TODO");
 
-        RefType lt_ref = (RefType)lt;
+        lhsRefType = (RefType)lt;
         IType rt = rhs.typecheck(env);
 
-        if(!lt_ref.getInnerType().equals(rt))
+        if(!lhsRefType.getInnerType().equals(rt))
             throw new InvalidTypeException("TODO");
 
         return rt;
@@ -51,8 +52,14 @@ public class ASTAssign implements ASTNode {
     }
 
     @Override
-    public void compile(CodeBlock cb, Environment<Integer[]> env) throws CompilerException {
-        // TODO Auto-generated method stub   
+    public void compile(CodeBlock cb, Environment<SStackLocation> env) throws CompilerException {
+
+        lhs.compile(cb, env);
+        rhs.compile(cb, env);
+
+        ReferenceCell rc = cb.getRefCell(lhsRefType);
+        cb.emit(String.format("putfield %s/%s %s", rc.JVMId, rc.valueName, rc.valueJVMType));
+        cb.emit("sipush 0"); // TODO: improve
     }
     
 }

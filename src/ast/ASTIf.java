@@ -41,7 +41,7 @@ public class ASTIf implements  ASTNode {
     }
 
     @Override
-    public void compile(CodeBlock cb, Environment<Integer[]> env) throws CompilerException {
+    public void compile(CodeBlock cb, Environment<SStackLocation> env) throws CompilerException {
 
         /* ------- implementation without short circuit ------- */
 

@@ -7,4 +7,13 @@ public class IntType implements IType {
         return type instanceof IntType;
     }
     
+    public String getJVMId() {
+
+        return "int";
+    }
+
+    public String getJVMType() {
+
+        return "I";
+    }
 }

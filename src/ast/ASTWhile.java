@@ -44,7 +44,7 @@ public class ASTWhile implements ASTNode {
     }
 
     @Override
-    public void compile(CodeBlock cb, Environment<Integer[]> env) throws CompilerException {
+    public void compile(CodeBlock cb, Environment<SStackLocation> env) throws CompilerException {
 
         /* ------- implementation without short circuit ------- */
 
@@ -78,5 +78,6 @@ public class ASTWhile implements ASTNode {
         cb.emit("pop");
         cb.emit("goto " + sl);
         cb.emit(fl + ":");
+        cb.emit("sipush 0"); // TODO: improve
     }
 }

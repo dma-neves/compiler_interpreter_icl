@@ -1,5 +1,6 @@
 package ast;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import ast.exceptions.*;
@@ -8,12 +9,13 @@ import ast.values.*;
 
 public class ASTDef implements ASTNode{
 
-    Map<String, ASTNode> assignments;
+    Map<String, ASTNode> definitions;
+    Map<ASTNode, IType> definitionTypes = new HashMap<>();
     ASTNode exp;
 
-    public ASTDef(Map<String, ASTNode> assignments, ASTNode exp) {
+    public ASTDef(Map<String, ASTNode> definitions, ASTNode exp) {
 
-        this.assignments = assignments;
+        this.definitions = definitions;
         this.exp = exp;
     }
 
@@ -21,9 +23,15 @@ public class ASTDef implements ASTNode{
 
         env = env.beginScope();
 
-        for(java.util.Map.Entry<String, ASTNode> assignment : assignments.entrySet()) {
+        for(java.util.Map.Entry<String, ASTNode> def : definitions.entrySet()) {
 
-            env.assoc(assignment.getKey() , assignment.getValue().typecheck(env));
+            String id = def.getKey();
+            ASTNode node = def.getValue();
+
+            IType type = node.typecheck(env);
+            definitionTypes.put(node, type);
+
+            env.assoc(id , type);
         }
 
         IType t = exp.typecheck(env);
@@ -36,13 +44,13 @@ public class ASTDef implements ASTNode{
 
         env = env.beginScope();
 
-        for(java.util.Map.Entry<String, ASTNode> assignment : assignments.entrySet()) {
+        for(java.util.Map.Entry<String, ASTNode> def : definitions.entrySet()) {
 
-            String id = assignment.getKey();
-            ASTNode assignmentExp = assignment.getValue();
+            String JVMId = def.getKey();
+            ASTNode defExp = def.getValue();
 
-            IValue assignmentValue = assignmentExp.eval(env);
-            env.assoc(id, assignmentValue);
+            IValue defValue = defExp.eval(env);
+            env.assoc(JVMId, defValue);
         }
 
         IValue val = exp.eval(env);
@@ -50,38 +58,40 @@ public class ASTDef implements ASTNode{
         return val;    
     }
 
-    public void compile(CodeBlock cb, Environment<Integer[]> env) throws CompilerException {
+    public void compile(CodeBlock cb, Environment<SStackLocation> env) throws CompilerException {
 
         Frame currentFrame = cb.getFrame(env);
         if(currentFrame == null)
-            currentFrame = new Frame();
+            currentFrame = new Frame(); // Don't register the first Frame in the CodeBlock since it won't contain any definitions
 
         env = env.beginScope();
         Frame newFrame = cb.newFrame(env, currentFrame);
 
-        cb.emit(String.format("new %s", newFrame.id));
+        cb.emit(String.format("new %s", newFrame.JVMId));
         cb.emit("dup");
-        cb.emit(String.format("invokespecial %s/<init>()V", newFrame.id));
+        cb.emit(String.format("invokespecial %s/<init>()V", newFrame.JVMId));
         cb.emit("dup");
         cb.emit(CodeBlock.LOAD_SL);
-        cb.emit(String.format("putfield %s/sl %s", newFrame.id, currentFrame.type));
+        cb.emit(String.format("putfield %s/sl %s", newFrame.JVMId, newFrame.parent.JVMType));
         cb.emit(CodeBlock.STORE_SL);
 
-        for(java.util.Map.Entry<String, ASTNode> assignment : assignments.entrySet()) {
+        for(java.util.Map.Entry<String, ASTNode> def : definitions.entrySet()) {
 
-            env.assoc(assignment.getKey(), new Integer[]{newFrame.depth, newFrame.nslots});
+            String id = def.getKey();
+            ASTNode node = def.getValue();
+            Slot slot = newFrame.newSlot( definitionTypes.get(node).getJVMType() );
+
+            env.assoc(id, new SStackLocation(newFrame.depth, slot));
 
             cb.emit(CodeBlock.LOAD_SL);
-            assignment.getValue().compile(cb, env);
-            cb.emit(String.format("putfield %s/X%d I", newFrame.id, newFrame.nslots));
-
-            newFrame.nslots++;
+            node.compile(cb, env);
+            cb.emit(String.format("putfield %s/%s %s", newFrame.JVMId, slot.name, slot.JVMType));
         }
 
         exp.compile(cb, env);
 
         cb.emit(CodeBlock.LOAD_SL);
-        cb.emit(String.format("getfield %s/sl %s", newFrame.id, currentFrame.type));
+        cb.emit(String.format("getfield %s/sl %s", newFrame.JVMId, newFrame.parent.JVMType));
         cb.emit(CodeBlock.STORE_SL);
 
         env = env.endScope();

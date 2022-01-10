@@ -45,12 +45,12 @@ public class ICLCompiler {
 
             ASTNode ast = parser.Start();
             ast.typecheck(new ast.Environment<IType>());
-            ast.compile(cb, new Environment<Integer[]>());
+            ast.compile(cb, new Environment<ast.SStackLocation>());
 
             String name = iclFile.substring( iclFile.lastIndexOf("/")+1, iclFile.lastIndexOf(".") );
             String mainFile = name + ".j";
             dump(cb, mainFile, name);
-            assemble(mainFile, cb.frameFiles());
+            assemble(mainFile, cb.frameFiles(), cb.refCellFiles());
         }
         catch(ParseException e) {
             System.out.println("Syntax error: " + e.getMessage());
@@ -70,11 +70,12 @@ public class ICLCompiler {
     public static void dump(CodeBlock cb, String mainFile, String name) {
 
         cb.dumpFrames();
+        cb.dumpRefCells();
         
         try {
             PrintStream ps = new PrintStream(mainFile);
             ps.printf(J_START, name);
-            cb.dump(ps);
+            cb.dumpOpcodes(ps);
             ps.printf(J_END);
         }
         catch(FileNotFoundException e) {
@@ -82,11 +83,11 @@ public class ICLCompiler {
         }
     }
 
-    public static void assemble(String mainFile, String frameFiles) {
+    public static void assemble(String mainFile, String frameFiles, String refcellFiles) {
 
         try {
 
-            String cmd = "java -jar jasmin.jar " + mainFile + frameFiles;
+            String cmd = "java -jar jasmin.jar " + mainFile + frameFiles + refcellFiles;
             System.out.println("Running: " + cmd);
 
             Runtime run = Runtime.getRuntime();

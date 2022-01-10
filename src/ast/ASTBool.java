@@ -23,13 +23,13 @@ public class ASTBool implements ASTNodeSC {
         return new BoolVal(val);
     }
 
-    public void compile(CodeBlock cb, Environment<Integer[]> env) {
+    public void compile(CodeBlock cb, Environment<SStackLocation> env) {
 
         cb.emit("sipush " + (val ? 1 : 0));
     }
 
     @Override
-    public void compileShortCircuit(CodeBlock cb, Environment<Integer[]> env, String tl, String fl) throws CompilerException {
+    public void compileShortCircuit(CodeBlock cb, Environment<SStackLocation> env, String tl, String fl) throws CompilerException {
         
         cb.emit("goto " + (val ? tl : fl));    
     }

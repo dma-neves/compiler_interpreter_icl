@@ -18,4 +18,14 @@ public class RefType implements IType {
 
         return innerType.equals( ( (RefType)type).getInnerType() );
     }
+
+    public String getJVMId() {
+
+        return "ref_of_" + innerType.getJVMId();
+    }
+
+    public String getJVMType() {
+
+        return "L" + getJVMId() + ";";
+    }
 }

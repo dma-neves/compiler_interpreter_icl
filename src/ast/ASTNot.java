@@ -34,14 +34,14 @@ public class ASTNot implements ASTNodeSC {
         return new BoolVal( !bool_val.getVal() );
     }
 
-    public void compile(CodeBlock cb, Environment<Integer[]> env) throws CompilerException {
+    public void compile(CodeBlock cb, Environment<SStackLocation> env) throws CompilerException {
 
         n.compile(cb, env);
         cb.emit("ineg");
     }
 
     @Override
-    public void compileShortCircuit(CodeBlock cb, Environment<Integer[]> env, String tl, String fl) throws CompilerException {
+    public void compileShortCircuit(CodeBlock cb, Environment<SStackLocation> env, String tl, String fl) throws CompilerException {
         
         // TODO: Remove
         if(!(n instanceof ASTNodeSC))

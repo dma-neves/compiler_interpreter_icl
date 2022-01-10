@@ -6,6 +6,6 @@ def number=5 indice=new 2 res=new 1 in
         indice := !indice + 1
     end;
 
-    print !res
+    !res
 
 end;;

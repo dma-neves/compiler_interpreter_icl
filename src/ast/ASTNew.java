@@ -7,6 +7,7 @@ import ast.values.*;
 public class ASTNew implements ASTNode {
 
     ASTNode exp;
+    RefType expRefType;
 
     public ASTNew(ASTNode exp) {
 
@@ -16,7 +17,8 @@ public class ASTNew implements ASTNode {
     @Override
     public IType typecheck(Environment<IType> env) throws InvalidTypeException {
 
-        return new RefType( exp.typecheck(env) );
+        expRefType = new RefType( exp.typecheck(env) );
+        return expRefType;
     }
 
     @Override
@@ -27,7 +29,15 @@ public class ASTNew implements ASTNode {
     }
 
     @Override
-    public void compile(CodeBlock cb, Environment<Integer[]> env) throws CompilerException {
-        // TODO Auto-generated method stub        
+    public void compile(CodeBlock cb, Environment<SStackLocation> env) throws CompilerException {
+        
+        ReferenceCell refCell = cb.getRefCell(expRefType);
+
+        cb.emit(String.format("new %s", refCell.JVMId));
+        cb.emit("dup");
+        cb.emit(String.format("invokespecial %s/<init>()V", refCell.JVMId));
+        cb.emit("dup");
+        exp.compile(cb, env);
+        cb.emit(String.format("putfield %s/%s %s", refCell.JVMId, refCell.valueName, refCell.valueJVMType));
     }
 }

@@ -7,26 +7,28 @@ import ast.values.*;
 
 public class ASTDeref implements ASTNode {
 
-    ASTNode n;
+    ASTNode exp;
+    RefType expRefType;
 
-    public ASTDeref(ASTNode n) {
+    public ASTDeref(ASTNode exp) {
 
-        this.n = n;
+        this.exp = exp;
     }
 
     public IType typecheck(Environment<IType> env) throws InvalidTypeException {
 
-        IType t = n.typecheck(env);
+        IType t = exp.typecheck(env);
         if(!(t instanceof RefType))
             throw new InvalidTypeException("TODO");
 
-        return ( (RefType)t ).getInnerType();
+        expRefType = (RefType)t;
+        return expRefType.getInnerType();
     }
 
     @Override
     public IValue eval(Environment<IValue> env) throws InterpreterException {
 
-        IValue v = n.eval(env);
+        IValue v = exp.eval(env);
 
         if(! (v instanceof CellVal) )
             throw new InterpreterException("Dereference error: Expected");
@@ -35,8 +37,11 @@ public class ASTDeref implements ASTNode {
     }
 
     @Override
-    public void compile(CodeBlock cb, Environment<Integer[]> env) throws CompilerException {
-        // TODO Auto-generated method stub
-        
+    public void compile(CodeBlock cb, Environment<SStackLocation> env) throws CompilerException {
+
+        exp.compile(cb, env);
+
+        ReferenceCell rc = cb.getRefCell(expRefType);
+        cb.emit(String.format("getfield %s/%s %s", rc.JVMId, rc.valueName, rc.valueJVMType));
     }
 }

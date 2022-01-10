@@ -26,7 +26,7 @@ public class ASTPrint implements ASTNode {
     }
 
     @Override
-    public void compile(CodeBlock cb, Environment<Integer[]> env) throws CompilerException {
+    public void compile(CodeBlock cb, Environment<SStackLocation> env) throws CompilerException {
         // TODO Auto-generated method stub
         
     }    

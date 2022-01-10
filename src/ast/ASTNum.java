@@ -24,7 +24,7 @@ public class ASTNum implements ASTNode {
         return new IntVal(val);
     }
 
-    public void compile(CodeBlock cb, Environment<Integer[]> env) {
+    public void compile(CodeBlock cb, Environment<SStackLocation> env) {
 
         cb.emit("sipush " + val);
     }

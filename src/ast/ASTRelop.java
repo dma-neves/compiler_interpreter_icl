@@ -72,7 +72,7 @@ public class ASTRelop implements ASTNodeSC {
         throw new InterpreterException("Invalid token");
     }
 
-    public void compile(CodeBlock cb, Environment<Integer[]> env) throws CompilerException {
+    public void compile(CodeBlock cb, Environment<SStackLocation> env) throws CompilerException {
 
         String l1 = LabelGenerator.next();
         String l2 = LabelGenerator.next();
@@ -104,7 +104,7 @@ public class ASTRelop implements ASTNodeSC {
     }
 
     @Override
-    public void compileShortCircuit(CodeBlock cb, Environment<Integer[]> env, String tl, String fl) throws CompilerException {
+    public void compileShortCircuit(CodeBlock cb, Environment<SStackLocation> env, String tl, String fl) throws CompilerException {
 
         lhs.compile(cb, env);
         rhs.compile(cb, env);

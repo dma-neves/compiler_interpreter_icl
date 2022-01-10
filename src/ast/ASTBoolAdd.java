@@ -39,7 +39,7 @@ public class ASTBoolAdd implements ASTNodeSC {
         return new BoolVal(v1_bool.getVal() || v2_bool.getVal());
     }
 
-    public void compile(CodeBlock cb, Environment<Integer[]> env) throws CompilerException {
+    public void compile(CodeBlock cb, Environment<SStackLocation> env) throws CompilerException {
 
         lhs.compile(cb, env);
         rhs.compile(cb, env);
@@ -47,7 +47,7 @@ public class ASTBoolAdd implements ASTNodeSC {
     }
 
     @Override
-    public void compileShortCircuit(CodeBlock cb, Environment<Integer[]> env, String tl, String fl) throws CompilerException {
+    public void compileShortCircuit(CodeBlock cb, Environment<SStackLocation> env, String tl, String fl) throws CompilerException {
         
         // TODO: Remove
         if(!(lhs instanceof ASTNodeSC))

@@ -34,33 +34,30 @@ public class ASTId implements ASTNode {
 		}
 	}
 
-	public void compile(CodeBlock cb, Environment<Integer[]> env) throws CompilerException {
+	public void compile(CodeBlock cb, Environment<SStackLocation> env) throws CompilerException {
 		
-		Integer[] coordinates;
+		SStackLocation location;
 		try {
-			coordinates = env.find(id);
+			location = env.find(id);
 		}
 		catch (InvalidIdException e) {
 			throw new CompilerException(e.getMessage());
 		}
 
-		int depth = coordinates[0].intValue();
-		int slot = coordinates[1].intValue();
-
 		cb.emit(CodeBlock.LOAD_SL);
 
-		Environment<Integer[]> aux_env = env;
+		Environment<SStackLocation> aux_env = env;
 		Frame currentFrame = cb.getFrame(env);
 		Frame targetFrame = currentFrame;
 		
-		for(int d = currentFrame.depth; d > depth; d--) {
+		for(int d = currentFrame.depth; d > location.depth; d--) {
 
-			cb.emit(String.format("getfield %s/sl %s", targetFrame.id, targetFrame.parent.type ));
+			cb.emit(String.format("getfield %s/sl %s", targetFrame.JVMId, targetFrame.parent.JVMType ));
 
 			aux_env = aux_env.parent;
 			targetFrame = cb.getFrame(aux_env);
 		}
 
-		cb.emit(String.format("getfield %s/X%d I", targetFrame.id, slot));
+		cb.emit(String.format("getfield %s/%s %s", targetFrame.JVMId, location.slot.name, location.slot.JVMType));
 	}
 }

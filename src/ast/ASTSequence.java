@@ -27,8 +27,10 @@ public class ASTSequence implements ASTNode {
     }
 
     @Override
-    public void compile(CodeBlock cb, Environment<Integer[]> env) throws CompilerException {
-        // TODO Auto-generated method stub
-        
+    public void compile(CodeBlock cb, Environment<SStackLocation> env) throws CompilerException {
+
+        lhs.compile(cb, env);
+        cb.emit("pop");
+        rhs.compile(cb, env);
     }
 }

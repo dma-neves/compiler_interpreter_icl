@@ -37,7 +37,7 @@ public class ASTSub implements ASTNode {
         return new IntVal(v1_int.getVal() - v2_int.getVal());
     }
 
-    public void compile(CodeBlock cb, Environment<Integer[]> env) throws CompilerException {
+    public void compile(CodeBlock cb, Environment<SStackLocation> env) throws CompilerException {
 
         lhs.compile(cb, env);
         rhs.compile(cb, env);
