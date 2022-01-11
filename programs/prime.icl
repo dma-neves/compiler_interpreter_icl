@@ -1,11 +1,11 @@
-def number = 23 div = new 2 res = new 0 isprime = new true in
+def number = 23 div = new 2 divRes = new 0 isprime = new true in
 
     while (!div < number) && !isprime
     do
 
-        res := number / !div;
+        divRes := number / !div;
 
-        if !res * !div == number then
+        if !divRes * !div == number then
             isprime := false
         else
             isprime := true
@@ -15,6 +15,7 @@ def number = 23 div = new 2 res = new 0 isprime = new true in
 
     end;
 
+    print !isprime;
     !isprime
 
 end;;

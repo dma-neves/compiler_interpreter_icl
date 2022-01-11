@@ -3,9 +3,15 @@ package ast;
 import ast.exceptions.*;
 import ast.types.IType;
 import ast.values.*;
+
 public class ASTPrint implements ASTNode {
 
+    public static final String GET_STATIC = "getstatic java/lang/System/out Ljava/io/PrintStream;";
+    public static final String PRINT = "invokestatic java/lang/String/valueOf(%s)Ljava/lang/String;\n" +
+                                        "invokevirtual java/io/PrintStream/println(Ljava/lang/String;)V";
+
     ASTNode exp;
+    IType expType;
 
     public ASTPrint(ASTNode exp) {
         this.exp = exp;
@@ -14,7 +20,8 @@ public class ASTPrint implements ASTNode {
     @Override
     public IType typecheck(Environment<IType> env) throws InvalidTypeException {
         
-        return exp.typecheck(env);
+        expType = exp.typecheck(env);
+        return expType;
     }
 
     @Override
@@ -27,7 +34,10 @@ public class ASTPrint implements ASTNode {
 
     @Override
     public void compile(CodeBlock cb, Environment<SStackLocation> env) throws CompilerException {
-        // TODO Auto-generated method stub
-        
+
+        cb.emit(GET_STATIC);
+        exp.compile(cb, env);
+        cb.emit(String.format(PRINT, expType.getJVMType()));
+        cb.emit("sipush 0");
     }    
 }
