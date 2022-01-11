@@ -67,11 +67,10 @@ public class CodeBlock {
 
             try {
 
-                // TODO: might not be necessary to check if null
-                String parentType = frame.parent.JVMType == null ? "Ljava/lang/Object;" : frame.parent.JVMType;
+                //String parentType = frame.parent.JVMType == null ? "Ljava/lang/Object;" : frame.parent.JVMType;
 
                 FileWriter fw = new FileWriter(frame.JVMId + ".j");
-                fw.write(String.format(FRAME_START, frame.JVMId, parentType));
+                fw.write(String.format(FRAME_START, frame.JVMId, frame.parent.JVMType));
 
                 for(Slot slot : frame.slots)
                     fw.write(String.format(FRAME_FIELD, slot.name, slot.JVMType));

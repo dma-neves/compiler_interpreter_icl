@@ -33,6 +33,8 @@ TOKEN :
 	|
 	< NEW : "new" >
 	|
+	<PRINTLN : "println" >
+	|
 	< PRINT : "print" >
 	|
 	< IF : "if" >
@@ -187,6 +189,7 @@ ASTNode Unary() :
 		tok = <Id> { t1 = new ASTId(tok.image); } |
 		<NEW> t1=Unary() { t1 = new ASTNew(t1); } |
 		<DEREF> t1=Unary() { t1 = new ASTDeref(t1); } |
+		<PRINTLN> t1=Unary() { t1 = new ASTPrintln(t1); } |
 		<PRINT> t1=Unary() { t1 = new ASTPrint(t1); } |
 
 		t1 = Def() |

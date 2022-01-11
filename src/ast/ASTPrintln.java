@@ -4,16 +4,16 @@ import ast.exceptions.*;
 import ast.types.IType;
 import ast.values.*;
 
-public class ASTPrint implements ASTNode {
+public class ASTPrintln implements ASTNode {
 
     public static final String GET_STATIC = "getstatic java/lang/System/out Ljava/io/PrintStream;";
     public static final String PRINT = "invokestatic java/lang/String/valueOf(%s)Ljava/lang/String;\n" +
-                                        "invokevirtual java/io/PrintStream/print(Ljava/lang/String;)V";
+                                        "invokevirtual java/io/PrintStream/println(Ljava/lang/String;)V";
 
     ASTNode exp;
     IType expType;
 
-    public ASTPrint(ASTNode exp) {
+    public ASTPrintln(ASTNode exp) {
         this.exp = exp;
     }
 
