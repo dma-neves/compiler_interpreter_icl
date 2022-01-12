@@ -9,11 +9,11 @@ import ast.values.*;
 
 public class ASTDef implements ASTNodeSC {
 
-    Map<String, ASTNode> definitions;
+    Map<TypedId, ASTNode> definitions;
     Map<ASTNode, IType> definitionTypes = new HashMap<>();
     ASTNode exp;
 
-    public ASTDef(Map<String, ASTNode> definitions, ASTNode exp) {
+    public ASTDef(Map<TypedId, ASTNode> definitions, ASTNode exp) {
 
         this.definitions = definitions;
         this.exp = exp;
@@ -23,9 +23,9 @@ public class ASTDef implements ASTNodeSC {
 
         env = env.beginScope();
 
-        for(java.util.Map.Entry<String, ASTNode> def : definitions.entrySet()) {
+        for(java.util.Map.Entry<TypedId, ASTNode> def : definitions.entrySet()) {
 
-            String id = def.getKey();
+            String id = def.getKey().id;
             ASTNode node = def.getValue();
 
             IType type = node.typecheck(env);
@@ -44,9 +44,9 @@ public class ASTDef implements ASTNodeSC {
 
         env = env.beginScope();
 
-        for(java.util.Map.Entry<String, ASTNode> def : definitions.entrySet()) {
+        for(java.util.Map.Entry<TypedId, ASTNode> def : definitions.entrySet()) {
 
-            String JVMId = def.getKey();
+            String JVMId = def.getKey().id;
             ASTNode defExp = def.getValue();
 
             IValue defValue = defExp.eval(env);
@@ -75,9 +75,9 @@ public class ASTDef implements ASTNodeSC {
         cb.emit(String.format("putfield %s/sl %s", newFrame.JVMId, newFrame.parent.JVMType));
         cb.emit(CodeBlock.STORE_SL);
 
-        for(java.util.Map.Entry<String, ASTNode> def : definitions.entrySet()) {
+        for(java.util.Map.Entry<TypedId, ASTNode> def : definitions.entrySet()) {
 
-            String id = def.getKey();
+            String id = def.getKey().id;
             ASTNode node = def.getValue();
             Slot slot = newFrame.newSlot( definitionTypes.get(node).getJVMType() );
 
