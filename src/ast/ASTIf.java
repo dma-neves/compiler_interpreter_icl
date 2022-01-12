@@ -37,7 +37,7 @@ public class ASTIf implements  ASTNodeSC {
         if( !(cv instanceof BoolVal) )
             throw new InterpreterException("Eval error: Expected bool");
 
-        return ((BoolVal)cv).getVal() ? exp_a.eval(env) : exp_a.eval(env);
+        return ((BoolVal)cv).getVal() ? exp_a.eval(env) : exp_b.eval(env);
     }
 
     @Override
