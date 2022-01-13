@@ -3,6 +3,8 @@
 **Description**
 - An interpreter and respective compiler, that generates JVM bytecode, for a made up language. Wirtten as an assignment for the *Interpretation and Compilation of Programming Languages (ICL)* course.
 
+**Features**
+
 **Example**
 ```ruby
 def
