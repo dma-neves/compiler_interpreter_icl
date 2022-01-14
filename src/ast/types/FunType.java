@@ -2,7 +2,7 @@ package ast.types;
 
 import java.util.*;
 
-public class FunType implements IType{
+public class FunType implements IType {
 
     private List<IType> paramTypes;
     private IType returnType;
@@ -40,8 +40,16 @@ public class FunType implements IType{
 
     @Override
     public String getJVMId() {
-        // TODO Auto-generated method stub
-        return null;
+        
+        // TODO: check if the ID should be defined like this
+        String id = "closure_interface";
+
+        for(IType pt : paramTypes)
+            id += "_" + pt.getJVMId();
+
+        id += "_" + returnType.getJVMId();
+
+        return id;
     }
 
     @Override

@@ -200,7 +200,10 @@ List<ASTNode> Arguments() :
 }
 {
 
-	t1=Expression() { args.add(t1); } ( <COMMA> t1=Expression() { args.add(t1); } )*
+	(
+		t1=Expression() { args.add(t1); } ( <COMMA> t1=Expression() { args.add(t1); } )*
+	)?
+
 	{ return args; }
 }
 
@@ -300,7 +303,7 @@ IType Type() :
 		<INT> { t = new IntType(); } |
 		<BOOL> { t = new BoolType(); } |
 		<REF> t=Type() { t = new RefType(t); } |
-		<LPAR> t=Type() { paramTypes.add(t); } ( <COMMA> t=Type() {paramTypes.add(t); } )* <RPAR> t=Type() { t = new FunType(paramTypes, t); }
+		<LPAR> ( t=Type() { paramTypes.add(t); } ( <COMMA> t=Type() {paramTypes.add(t); } )* )? <RPAR> t=Type() { t = new FunType(paramTypes, t); }
 	)
 
 	{ return t; }
