@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Author: Rodrigo Mesquita
+# Test script author: Rodrigo Mesquita
 
 
 : << "testing-docs"
