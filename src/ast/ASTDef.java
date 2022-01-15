@@ -21,6 +21,8 @@ public class ASTDef implements ASTNodeSC {
 
     public IType typecheck(Environment<IType> env) throws InvalidTypeException {
 
+        //System.out.println("ASTDEf");
+
         env = env.beginScope();
 
         for(java.util.Map.Entry<TypedId, ASTNode> def : definitions.entrySet()) {
@@ -29,7 +31,9 @@ public class ASTDef implements ASTNodeSC {
             IType type = def.getKey().type;
             ASTNode node = def.getValue();
 
-            // Type is optional in def
+            //System.out.println("ASTDef id: " + id);
+
+            // Defining the type explicitly is optional in def
             if(type != null)
                 env.assoc(id , type);
 

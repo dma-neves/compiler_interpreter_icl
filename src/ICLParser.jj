@@ -240,7 +240,7 @@ ASTNode Def() :
 	ASTNode t1, tf;
 	IType t = null;
 	Token tok;
-	Map<TypedId, ASTNode> m = new HashMap<TypedId,ASTNode>();
+	Map<TypedId, ASTNode> m = new LinkedHashMap<TypedId,ASTNode>();
 }
 {
 	(

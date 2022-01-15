@@ -1,12 +1,14 @@
 #!/bin/bash
 
+# Author: Rodrigo Mesquita
+
 
 : << "testing-docs"
 ## Testing
 
-The folder `tests` has two files for each test. `file.test` and `file.correct`
+The folder `tests` has two files for each test. `file.icl` and `file.correct`
 
-The `.test` file is the input passed into `the program`, and the `.correct` file is the expected output
+The `.icl` file is the input passed into `the program`, and the `.correct` file is the expected output
 
 To test one of these files run:
 ```
@@ -30,12 +32,12 @@ testing-docs
 # Define tests to run
 tests=()
 # Fill tests array
-while IFS='' read -r line; do tests+=("$line"); done < <(find tests -maxdepth 1 -name '*.test' | sed 's/tests\///' | sed 's/\.test//')
+while IFS='' read -r line; do tests+=("$line"); done < <(find tests -maxdepth 1 -name '*.icl' | sed 's/tests\///' | sed 's/\.icl//')
 
 # Define command to run tests here
 run_command() {
     test_name=$1
-    java ICLInterpreter < tests/"$test_name".test
+    java ICLInterpreter < tests/"$test_name".icl
 }
 
 if [ "$1" ]

@@ -1,4 +1,4 @@
-SOURCE = prime
+SOURCE = source_3
 
 all: clean compile
 	

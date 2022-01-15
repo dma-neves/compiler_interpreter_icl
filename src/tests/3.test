@@ -1,1 +1,0 @@
-def x = new 2 in x := !x + !x * 2; x end
