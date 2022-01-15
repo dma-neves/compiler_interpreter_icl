@@ -1,14 +1,16 @@
 package ast;
 
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.*;
+import ast.types.FunType;
 
 public class Closure {
     
     public String JVMId;
+    public FunType funType;
+    public Frame frame;
 
-    public Closure(int index) {
+    public Closure(int index, FunType funType, Frame frame) {
         this.JVMId = "Closure_" + index;
+        this.funType = funType;
+        this.frame = frame;
     }
 }

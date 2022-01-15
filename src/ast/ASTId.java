@@ -20,7 +20,7 @@ public class ASTId implements ASTNodeSC {
 			return env.find(id);
 		} 
 		catch (InvalidIdException e) {
-			throw new InvalidTypeException("Referencing undefined ID");
+			throw new InvalidTypeException("Referencing undefined ID: " + id);
 		}
 	}
 

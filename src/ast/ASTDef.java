@@ -26,12 +26,18 @@ public class ASTDef implements ASTNodeSC {
         for(java.util.Map.Entry<TypedId, ASTNode> def : definitions.entrySet()) {
 
             String id = def.getKey().id;
+            IType type = def.getKey().type;
             ASTNode node = def.getValue();
 
-            IType type = node.typecheck(env);
-            definitionTypes.put(node, type);
-
             env.assoc(id , type);
+
+            IType nodeType = node.typecheck(env);
+            definitionTypes.put(node, nodeType);
+
+            //env.assoc(id , type);
+
+            if(!nodeType.equals(type))
+                throw new InvalidTypeException("TODO");
         }
 
         IType t = exp.typecheck(env);

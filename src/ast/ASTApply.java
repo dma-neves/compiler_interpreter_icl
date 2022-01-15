@@ -2,6 +2,7 @@ package ast;
 
 import java.util.*;
 import ast.exceptions.*;
+import ast.types.FunType;
 import ast.types.IType;
 import ast.values.ClosureVal;
 import ast.values.IValue;
@@ -11,6 +12,7 @@ public class ASTApply implements ASTNodeSC {
     ASTNode fun;
     List<ASTNode> args;
 
+    FunType funType;
 
     public ASTApply(ASTNode fun, List<ASTNode> args) {
         this.fun = fun;
@@ -20,8 +22,26 @@ public class ASTApply implements ASTNodeSC {
 
     @Override
     public IType typecheck(Environment<IType> env) throws InvalidTypeException {
-        // TODO Auto-generated method stub
-        return null;
+        
+        IType type = fun.typecheck(env);
+        if( !(type instanceof FunType) )
+            throw new InvalidTypeException("TODO");
+
+        funType = (FunType)type;
+        List<IType> paramTypes = funType.getParamTypes();
+
+        if(paramTypes.size() != args.size())
+            throw new InvalidTypeException();
+
+        for(int i = 0; i < paramTypes.size(); i++) {
+
+            type = args.get(i).typecheck(env);
+
+            if(!type.equals(paramTypes.get(i)))
+                throw new InvalidTypeException("TODO");
+        }
+
+        return funType.getReturnType();
     }
 
     @Override
@@ -56,15 +76,27 @@ public class ASTApply implements ASTNodeSC {
 
     @Override
     public void compile(CodeBlock cb, Environment<SStackLocation> env) throws CompilerException {
-        // TODO Auto-generated method stub
         
+        fun.compile(cb, env);
+        cb.emit(String.format("checkcast %s", funType.getJVMId()));
+
+        for(ASTNode arg : args)
+            arg.compile(cb, env);
+
+        cb.emit(String.format(
+                    "invokeinterface %s/apply(%s)%s %d",
+                    funType.getJVMId(), 
+                    funType.getParamJVMTypes(), 
+                    funType.getReturnType().getJVMType(),
+                    args.size()+1 // TODO: Why args.size()+1?
+                ));
     }
 
     @Override
-    public void compileShortCircuit(CodeBlock cb, Environment<SStackLocation> env, String tl, String fl)
-            throws CompilerException {
-        // TODO Auto-generated method stub
-        
+    public void compileShortCircuit(CodeBlock cb, Environment<SStackLocation> env, String tl, String fl) throws CompilerException {
+
+        compile(cb, env);
+        cb.emit("ifeq " + fl);
+        cb.emit("goto " + tl);        
     }
-    
 }

@@ -11,30 +11,51 @@ import ast.types.RefType;
 
 public class CodeBlock {
 
+    /* ---------------------------------------- Generic constructor opcodes ---------------------------------------- */
+
     public static final String CONSTRUCTOR = ".method public <init>()V\n" +
                                             "aload_0\n"+
                                             "invokenonvirtual java/lang/Object/<init>()V\n" +
                                             "return\n" +
                                             ".end method\n";
 
+    /* ---------------------------------------- Frame opcodes ---------------------------------------- */
+
     public static final String FRAME_START = ".class public %s\n" +
                                             ".super java/lang/Object\n" +
                                             ".field public sl %s\n";
-    public static final String FRAME_END = CONSTRUCTOR;
     public static final String FRAME_FIELD = ".field public %s %s\n";
+    public static final String FRAME_END = CONSTRUCTOR;
 
     public static final String LOAD_SL = "aload_3";
     public static final String STORE_SL = "astore_3";
+
+    /* ---------------------------------------- Reference Cell opcodes ---------------------------------------- */
 
     public static final String REFERENCE_CELL = ".class public %s\n" +
                                                 ".super java/lang/Object\n" +
                                                 ".field public v %s\n" +
                                                 CONSTRUCTOR;
 
+    /* ---------------------------------------- Closure opcodes ---------------------------------------- */
+
     public static final String CLOSURE_INTERFACE = ".interface public %s\n" +
                                                     ".super java/lang/Object\n" +
                                                     ".method public abstract apply(%s)%s\n" +
-                                                    ".end method";
+                                                    ".end method\n";
+
+    public static final String CLOSURE_CLASS_START = ".class public %s\n" +
+                                                    ".super java/lang/Object\n" +
+                                                    ".implements %s\n" +
+                                                    ".field public sl %s\n" +
+                                                    CONSTRUCTOR;
+
+    public static final String APPLY_START = ".method public apply(%s)%s\n" +
+                                                ".limit locals %d\n" +
+                                                ".limit stack 256\n";                                         
+    public static final String APPLY_END = ".end method\n";
+
+    /* ---------------------------------------- fields ---------------------------------------- */
 
     private List<String> opcodes;
     private Map<Environment<SStackLocation>, Frame> frames;
@@ -42,21 +63,23 @@ public class CodeBlock {
     private Map<Closure, List<String>> closures = new HashMap<>();          // function id, Closure
     private Map<String, FunType> closureInterfaces = new HashMap<>(); // Closure Interface JVMId, FunType
 
+    private Closure activeClosure = null;
+
     public CodeBlock() {
 
         opcodes = new LinkedList<String>();
         frames = new HashMap<>();
     }
 
-    /* ---------------------------------------- op codes ---------------------------------------- */
+    /* ---------------------------------------- opcode methods ---------------------------------------- */
 
-    public void emit(String opc, Closure closure) {
+    public void emit(String opc) {
 
-        if(closure == null)
+        if(activeClosure == null)
             opcodes.add(opc);
 
         else
-            closures.get(closure).add(opc);
+            closures.get(activeClosure).add(opc);
     }
 
     public void dumpOpcodes(PrintStream ps) {
@@ -64,7 +87,7 @@ public class CodeBlock {
             ps.println(opc);
     }
 
-    /* ---------------------------------------- Frames ---------------------------------------- */
+    /* ---------------------------------------- Frame methods ---------------------------------------- */
 
     public Frame newFrame(Environment<SStackLocation> env, Frame parentFrame) {
 
@@ -73,6 +96,7 @@ public class CodeBlock {
         return f;
     }
 
+    // Change to return new Frame() if frame for env doesn't exist
     public Frame getFrame(Environment<SStackLocation> env) {
 
         return frames.get(env);
@@ -114,7 +138,7 @@ public class CodeBlock {
         return files;
     }
 
-    /* ---------------------------------------- Reference Cells ---------------------------------------- */
+    /* ---------------------------------------- Reference Cells methods ---------------------------------------- */
 
 
     // Retruns the ReferenceCell of the given reference Type, creating a new one if it doesn't exist
@@ -157,51 +181,77 @@ public class CodeBlock {
         return files;
     }
 
-    /* ---------------------------------------- Closures ---------------------------------------- */
+    /* ---------------------------------------- Closure methods ---------------------------------------- */
 
-    public Closure newClosure(FunType funType) {
+    public void compileToClosure(Closure closure) {
+
+        activeClosure = closure;
+    }
+
+    public void compileToMain() {
+
+        activeClosure = null;
+    }
+
+    public Closure newClosure(FunType funType, Frame frame) {
 
         closureInterfaces.put(funType.getJVMId(), funType);
 
-        Closure closure = new Closure(closures.size());
+        Closure closure = new Closure(closures.size(), funType, frame);
         closures.put(closure, new LinkedList<>());
 
         return closure;
     }
 
-    public void dumpClosures() throws IOException {
+    public void dumpClosures() {
 
-        for(Map.Entry<String, FunType> closureInterface : closureInterfaces.entrySet()) {
+        try {
 
-            String id = closureInterface.getKey();
-            FunType ft = closureInterface.getValue();
-            String returnJVMType = ft.getReturnType().getJVMType();
-            String paramJVMTypes = "";
+            /* Closure Interfaces */
+            for(Map.Entry<String, FunType> closureInterface : closureInterfaces.entrySet()) {
 
-            List<IType> paramTypes = ft.getParamTypes();
-            for(int i = 0; i < paramTypes.size(); i++) {
+                String id = closureInterface.getKey();
+                FunType ft = closureInterface.getValue();
+                String returnJVMType = ft.getReturnType().getJVMType();
+                String paramJVMTypes = ft.getParamJVMTypes();
 
-                paramJVMTypes += paramTypes.get(i).getJVMType();
-                if(i != paramTypes.size()-1)
-                    paramJVMTypes += ",";
+                FileWriter fw = new FileWriter(id + ".j"); // TODO: check if correct
+                fw.write(String.format(CLOSURE_INTERFACE, id, paramJVMTypes, returnJVMType));
+                fw.close();
             }
 
-            FileWriter fw = new FileWriter(id + ".j"); // TODO: check if correct
-            fw.write(String.format(CLOSURE_INTERFACE, id, paramJVMTypes, returnJVMType));
-            fw.close();
+            /* Closure classes */
+            for(Map.Entry<Closure, List<String>> c : closures.entrySet()) {
+
+                Closure closure = c.getKey();
+                List<String> apply_opcodes = c.getValue();
+                int nargs = closure.funType.getParamTypes().size();
+
+                FileWriter fw = new FileWriter(closure.JVMId + ".j");
+
+                fw.write(String.format(
+                            CLOSURE_CLASS_START, 
+                            closure.JVMId, 
+                            closure.funType.getJVMId(), 
+                            closure.frame.JVMType
+                        ));
+
+                fw.write(String.format(
+                            APPLY_START, 
+                            closure.funType.getParamJVMTypes(), 
+                            closure.funType.getReturnType().getJVMType(),
+                            (nargs < 2) ? 4 : nargs+2 // TODO
+                        ));
+
+                for(String aop : apply_opcodes) 
+                    fw.write(aop + "\n");
+
+                fw.write(APPLY_END);
+                fw.close();
+            }
         }
-
-        for(Map.Entry<Closure, List<String>> c : closures.entrySet()) {
-
-            Closure closure = c.getKey();
-            List<String> apply_opcodes = c.getValue();
-
-            FileWriter fw = new FileWriter(closure.JVMId + ".j");
-
-            for(String aop : apply_opcodes)
-                fw.write(aop);
-
-            fw.close();
+        catch(IOException e) {
+            e.printStackTrace();
         }
     }
 
