@@ -1,7 +1,7 @@
 package ast;
 
 /* 
-Spaghetti stack location
+    Spaghetti stack location
 */
 
 public class SStackLocation {

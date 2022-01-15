@@ -50,23 +50,12 @@ public class ASTRelop implements ASTNodeSC {
 
         switch(op) {
 
-            case ">":
-                return new BoolVal(v1_int > v2_int);
-
-            case "<":
-                return new BoolVal(v1_int < v2_int);
-
-            case "==":
-                return new BoolVal(v1_int == v2_int);
-
-            case "~=":
-                return new BoolVal(v1_int != v2_int);
-
-            case ">=":
-                return new BoolVal(v1_int >= v2_int);
-
-            case "<=":
-                return new BoolVal(v1_int <= v2_int);
+            case ">" : return new BoolVal(v1_int >  v2_int);
+            case "<" : return new BoolVal(v1_int <  v2_int);
+            case "==": return new BoolVal(v1_int == v2_int);
+            case "~=": return new BoolVal(v1_int != v2_int);
+            case ">=": return new BoolVal(v1_int >= v2_int);
+            case "<=": return new BoolVal(v1_int <= v2_int);
         }
 
         throw new InterpreterException("Invalid token");
@@ -82,18 +71,12 @@ public class ASTRelop implements ASTNodeSC {
         cb.emit("isub");
 
         switch(op) {
-            case ">":
-                cb.emit("ifgt " + l1); break;
-            case "<":
-                cb.emit("iflt " + l1); break;
-            case "==":
-                cb.emit("ifeq " + l1); break;
-            case "~=":
-                cb.emit("ifne " + l1); break;
-            case ">=":
-                cb.emit("ifge " + l1); break;
-            case "<=":
-                cb.emit("ifle " + l1); break;
+            case ">" : cb.emit("ifgt " + l1); break;
+            case "<" : cb.emit("iflt " + l1); break;
+            case "==": cb.emit("ifeq " + l1); break;
+            case "~=": cb.emit("ifne " + l1); break;
+            case ">=": cb.emit("ifge " + l1); break;
+            case "<=": cb.emit("ifle " + l1); break;
         }
 
         cb.emit("sipush 0");
@@ -110,20 +93,13 @@ public class ASTRelop implements ASTNodeSC {
         rhs.compile(cb, env);
         cb.emit("isub");        
 
-
         switch(op) {
-            case ">":
-                cb.emit("ifgt " + tl); break;
-            case "<":
-                cb.emit("iflt " + tl); break;
-            case "==":
-                cb.emit("ifeq " + tl); break;
-            case "~=":
-                cb.emit("ifne " + tl); break;
-            case ">=":
-                cb.emit("ifge " + tl); break;
-            case "<=":
-                cb.emit("ifle " + tl); break;
+            case ">" : cb.emit("ifgt " + tl); break;
+            case "<" : cb.emit("iflt " + tl); break;
+            case "==": cb.emit("ifeq " + tl); break;
+            case "~=": cb.emit("ifne " + tl); break;
+            case ">=": cb.emit("ifge " + tl); break;
+            case "<=": cb.emit("ifle " + tl); break;
         }
 
         cb.emit("goto " + fl);

@@ -1,8 +1,8 @@
-SOURCE = source_3
+SOURCE = fun2
 
 all: clean compile
 	
-runc:
+runcompiler:
 	java ICLCompiler ../programs/$(SOURCE).icl
 	java $(SOURCE)
 

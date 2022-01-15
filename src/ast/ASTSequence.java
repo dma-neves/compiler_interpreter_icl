@@ -39,6 +39,6 @@ public class ASTSequence implements ASTNodeSC {
 
         lhs.compile(cb, env);
         cb.emit("pop");
-        ( (ASTNodeSC)rhs).compileShortCircuit(cb, env, tl, fl); // TODO: Check if correct
+        ( (ASTNodeSC)rhs).compileShortCircuit(cb, env, tl, fl);
     }
 }

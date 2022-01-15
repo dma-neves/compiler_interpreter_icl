@@ -21,8 +21,6 @@ public class ASTDef implements ASTNodeSC {
 
     public IType typecheck(Environment<IType> env) throws InvalidTypeException {
 
-        //System.out.println("ASTDEf");
-
         env = env.beginScope();
 
         for(java.util.Map.Entry<TypedId, ASTNode> def : definitions.entrySet()) {
@@ -30,8 +28,6 @@ public class ASTDef implements ASTNodeSC {
             String id = def.getKey().id;
             IType type = def.getKey().type;
             ASTNode node = def.getValue();
-
-            //System.out.println("ASTDef id: " + id);
 
             // Defining the type explicitly is optional in def
             if(type != null)
@@ -74,9 +70,6 @@ public class ASTDef implements ASTNodeSC {
     public void compile(CodeBlock cb, Environment<SStackLocation> env) throws CompilerException {
 
         Frame currentFrame = cb.getFrame(env);
-        if(currentFrame == null)
-            currentFrame = new Frame(); // Don't register the first Frame in the CodeBlock since it won't contain any definitions
-
         env = env.beginScope();
         Frame newFrame = cb.newFrame(env, currentFrame);
 

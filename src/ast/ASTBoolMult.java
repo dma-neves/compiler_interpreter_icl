@@ -47,10 +47,6 @@ public class ASTBoolMult implements ASTNodeSC {
 
     @Override
     public void compileShortCircuit(CodeBlock cb, Environment<SStackLocation> env, String tl, String fl) throws CompilerException {
-        
-        // TODO: Remove
-        if(!(lhs instanceof ASTNodeSC))
-            System.out.println("NOT A ASTNodeSC (BoolMult)");
 
         String auxLabel = LabelGenerator.next();
         ( (ASTNodeSC)lhs ).compileShortCircuit(cb, env, auxLabel, fl);

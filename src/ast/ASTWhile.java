@@ -66,10 +66,6 @@ public class ASTWhile implements ASTNodeSC {
         String sl = LabelGenerator.next(); // Start label
         String tl = LabelGenerator.next(); // true label
         String fl = LabelGenerator.next(); // false label
-
-        // TODO: Remove
-        if(!(cond instanceof ASTNodeSC))
-            System.out.println("NOT A ASTNodeSC (While)");
         
         cb.emit(sl + ":");
         ( (ASTNodeSC)cond ).compileShortCircuit(cb, env, tl, fl);

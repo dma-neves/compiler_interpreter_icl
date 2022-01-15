@@ -50,10 +50,9 @@ public class ASTFun implements ASTNode {
     @Override
     public void compile(CodeBlock cb, Environment<SStackLocation> env) throws CompilerException {
 
-        Frame currentFrame = cb.getFrame(env);
-        if(currentFrame == null)
-            currentFrame = new Frame(); // Don't register the first Frame in the CodeBlock since it won't contain any definitions
+        /* --------------- create new closure object --------------- */
 
+        Frame currentFrame = cb.getFrame(env);
         Closure closure = cb.newClosure(funType, currentFrame);
         cb.emit(String.format("new %s", closure.JVMId));
         cb.emit("dup");
@@ -64,6 +63,8 @@ public class ASTFun implements ASTNode {
 
         env = env.beginScope();
         Frame newFrame = cb.newFrame(env, currentFrame);
+
+        /* --------------- generate code for the closure's apply method  --------------- */
 
         cb.compileToClosure(closure);
         cb.emit(String.format("new %s", newFrame.JVMId));

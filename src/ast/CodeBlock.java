@@ -96,10 +96,16 @@ public class CodeBlock {
         return f;
     }
 
-    // Change to return new Frame() if frame for env doesn't exist
     public Frame getFrame(Environment<SStackLocation> env) {
 
-        return frames.get(env);
+        /*
+            If a frame doesn't exist for the given environment, that means that the root frame is being accessed.
+            Since the root frame doen't need to exist (given it doesnt contain any defs) we can
+            simply return an empty frame ( new Frame() ) which isn't registered in the frames map
+        */
+
+        Frame frame = frames.get(env);
+        return (frame != null) ? frame : new Frame();
     }
 
     public void dumpFrames() {
@@ -107,9 +113,6 @@ public class CodeBlock {
         for(Frame frame : frames.values()) {
 
             try {
-
-                // TODO: remove
-                //String parentType = frame.parent.JVMType == null ? "Ljava/lang/Object;" : frame.parent.JVMType;
 
                 FileWriter fw = new FileWriter(frame.JVMId + ".j");
                 fw.write(String.format(FRAME_START, frame.JVMId, frame.parent.JVMType));
@@ -215,7 +218,7 @@ public class CodeBlock {
                 String returnJVMType = ft.getReturnType().getJVMType();
                 String paramJVMTypes = ft.getParamJVMTypes();
 
-                FileWriter fw = new FileWriter(id + ".j"); // TODO: check if correct
+                FileWriter fw = new FileWriter(id + ".j");
                 fw.write(String.format(CLOSURE_INTERFACE, id, paramJVMTypes, returnJVMType));
                 fw.close();
             }
@@ -240,7 +243,7 @@ public class CodeBlock {
                             APPLY_START, 
                             closure.funType.getParamJVMTypes(), 
                             closure.funType.getReturnType().getJVMType(),
-                            (nargs < 2) ? 4 : nargs+2 // TODO
+                            (nargs < 2) ? 4 : nargs+2 // TODO (is the correct way?)
                         ));
 
                 for(String aop : apply_opcodes) 

@@ -42,10 +42,6 @@ public class ASTNot implements ASTNodeSC {
 
     @Override
     public void compileShortCircuit(CodeBlock cb, Environment<SStackLocation> env, String tl, String fl) throws CompilerException {
-        
-        // TODO: Remove
-        if(!(n instanceof ASTNodeSC))
-            System.out.println("NOT A ASTNodeSC (Not)");
 
         ( (ASTNodeSC)n ).compileShortCircuit(cb, env, fl, tl);
     }

@@ -11,7 +11,4 @@ public class ReferenceCell {
         this.JVMId = JVMId;
         this.valueJVMType = valueJVMType;
     }
-
-    // public String getJVMId() { return JVMId; }
-    // public String getInnerTypeJ() { return innerJVMType; }
 }

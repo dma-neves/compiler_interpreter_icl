@@ -28,7 +28,6 @@ public class FunType implements IType {
 
     private void generateJVMId() {
 
-        // TODO: check if the ID should be defined like this
         JVMId = "closure_interface";
 
         for(IType pt : paramTypes)
@@ -68,7 +67,6 @@ public class FunType implements IType {
     @Override
     public String getJVMType() {
         
-        // TODO: check if it should be Object
         return "L" + getJVMId() + ";";
     }
     

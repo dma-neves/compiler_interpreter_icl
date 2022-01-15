@@ -63,10 +63,6 @@ public class ASTIf implements  ASTNodeSC {
         String if_el = LabelGenerator.next(); // exit label
         String if_tl = LabelGenerator.next(); // true label
         String if_fl = LabelGenerator.next(); // false label
-
-        // TODO: Remove
-        if(!(cond instanceof ASTNodeSC))
-            System.out.println("NOT A ASTNodeSC (While)");
         
         ( (ASTNodeSC)cond ).compileShortCircuit(cb, env, if_tl, if_fl);
         cb.emit(if_tl + ":");
