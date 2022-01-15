@@ -55,7 +55,7 @@
     end;;
     ```
 
-- Recursive factorial:
+- Recursive factorial
     ```ruby
     def
         f : (int)int = fun x:int -> 
