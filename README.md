@@ -5,7 +5,7 @@
 
 **Features**
 
-**Example**
+**Example (Approximating 100*Pi)**
 ```ruby
 def
     mod : (int,int)int = fun dividend:int, divisor:int ->
