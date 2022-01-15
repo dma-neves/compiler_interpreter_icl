@@ -29,14 +29,17 @@ public class ASTDef implements ASTNodeSC {
             IType type = def.getKey().type;
             ASTNode node = def.getValue();
 
-            env.assoc(id , type);
+            // Type is optional in def
+            if(type != null)
+                env.assoc(id , type);
 
             IType nodeType = node.typecheck(env);
             definitionTypes.put(node, nodeType);
 
-            //env.assoc(id , type);
+            if(type == null)
+                env.assoc(id , nodeType);
 
-            if(!nodeType.equals(type))
+            else if(!nodeType.equals(type))
                 throw new InvalidTypeException("TODO");
         }
 

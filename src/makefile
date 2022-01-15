@@ -1,4 +1,4 @@
-SOURCE = pi
+SOURCE = prime
 
 all: clean compile
 	
