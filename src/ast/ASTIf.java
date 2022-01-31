@@ -19,13 +19,13 @@ public class ASTIf implements  ASTNodeSC {
     public IType typecheck(Environment<IType> env) throws InvalidTypeException {
 
         if( !(cond.typecheck(env) instanceof BoolType))
-            throw new InvalidTypeException("TODO");
+            throw new InvalidTypeException("Invalid type ASTIf");
 
         IType ta = exp_a.typecheck(env);
         IType tb = exp_b.typecheck(env);
 
         if(!ta.equals(tb))
-            throw new InvalidTypeException("TODO");
+            throw new InvalidTypeException("Invalid type ASTIf");
 
         return ta;
     }

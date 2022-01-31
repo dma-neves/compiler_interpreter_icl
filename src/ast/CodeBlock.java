@@ -73,6 +73,7 @@ public class CodeBlock {
 
     /* ---------------------------------------- opcode methods ---------------------------------------- */
 
+    /* Emit opc to main or to the activeClosure if it isn't null */
     public void emit(String opc) {
 
         if(activeClosure == null)
@@ -186,11 +187,13 @@ public class CodeBlock {
 
     /* ---------------------------------------- Closure methods ---------------------------------------- */
 
+    // Change compilation taget to closure
     public void compileToClosure(Closure closure) {
 
         activeClosure = closure;
     }
 
+    // Change compilation target to main
     public void compileToMain() {
 
         activeClosure = null;

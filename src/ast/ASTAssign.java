@@ -21,13 +21,13 @@ public class ASTAssign implements ASTNodeSC {
         IType lt = lhs.typecheck(env);
 
         if(! (lt instanceof RefType) )
-            throw new InvalidTypeException("TODO");
+            throw new InvalidTypeException("Invalid type ASTAssign");
 
         lhsRefType = (RefType)lt;
         IType rt = rhs.typecheck(env);
 
         if(!lhsRefType.getInnerType().equals(rt))
-            throw new InvalidTypeException("TODO");
+            throw new InvalidTypeException("Invalid type ASTAssign");
 
         return rt;
     }

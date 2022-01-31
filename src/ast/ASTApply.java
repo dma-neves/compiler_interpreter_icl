@@ -25,7 +25,7 @@ public class ASTApply implements ASTNodeSC {
         
         IType type = fun.typecheck(env);
         if( !(type instanceof FunType) )
-            throw new InvalidTypeException("TODO");
+            throw new InvalidTypeException("Invalid type ASTApply");
 
         funType = (FunType)type;
         List<IType> paramTypes = funType.getParamTypes();
@@ -38,7 +38,7 @@ public class ASTApply implements ASTNodeSC {
             type = args.get(i).typecheck(env);
 
             if(!type.equals(paramTypes.get(i)))
-                throw new InvalidTypeException("TODO");
+                throw new InvalidTypeException("Invalid type ASTApply");
         }
 
         return funType.getReturnType();
@@ -50,7 +50,7 @@ public class ASTApply implements ASTNodeSC {
         IValue funValue = fun.eval(env);
 
         if( !(funValue instanceof ClosureVal) )
-            throw new InvalidTypeException("TODO");
+            throw new InvalidTypeException("Invalid value ASTApply");
 
         ClosureVal closure = (ClosureVal)funValue;
 

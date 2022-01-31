@@ -70,6 +70,7 @@ public class ICLCompiler {
         }
     }
 
+    /* Dump all the opcodes to the respective .j files */
     public static void dump(CodeBlock cb, String mainFile, String name) {
 
         cb.dumpFrames();
@@ -87,6 +88,7 @@ public class ICLCompiler {
         }
     }
 
+    /* Assemble the program using all the .j files */
     public static void assemble(String mainFile, String frameFiles, String refcellFiles, String closureFiles) {
 
         try {

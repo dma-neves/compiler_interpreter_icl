@@ -19,7 +19,7 @@ public class ASTDeref implements ASTNodeSC {
 
         IType t = exp.typecheck(env);
         if(!(t instanceof RefType))
-            throw new InvalidTypeException("TODO");
+            throw new InvalidTypeException("Invalid type ASTDeref");
 
         expRefType = (RefType)t;
         return expRefType.getInnerType();

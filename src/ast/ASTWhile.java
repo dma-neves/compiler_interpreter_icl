@@ -16,7 +16,7 @@ public class ASTWhile implements ASTNodeSC {
     public IType typecheck(Environment<IType> env) throws InvalidTypeException {
 
         if( !(cond.typecheck(env) instanceof BoolType))
-            throw new InvalidTypeException("TODO");
+            throw new InvalidTypeException("Invalid type ASTWhile");
 
         return exp.typecheck(env);
     }
@@ -74,7 +74,7 @@ public class ASTWhile implements ASTNodeSC {
         cb.emit("pop");
         cb.emit("goto " + sl);
         cb.emit(fl + ":");
-        cb.emit("sipush 0"); // TODO: improve
+        cb.emit("sipush 0");
     }
 
     @Override

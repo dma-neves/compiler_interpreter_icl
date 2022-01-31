@@ -38,6 +38,8 @@ public class FunType implements IType {
 
     @Override
     public boolean equals(IType type) {
+
+        // TODO: use JVMId comparison instead?
         
         if( !(type instanceof FunType) )
             return false;

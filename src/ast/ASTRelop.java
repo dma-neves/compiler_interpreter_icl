@@ -24,15 +24,15 @@ public class ASTRelop implements ASTNodeSC {
         IType tr = rhs.typecheck(env);
 
         if(!tl.equals(tr))
-            throw new InvalidTypeException("TODO");
+            throw new InvalidTypeException("Invalid type ASTRelop");
         
         if(op.equals("==") || op.equals("~=")) {
 
             if(!(tl instanceof BoolType) && !(tl instanceof IntType))
-                throw new InvalidTypeException("TODO");
+                throw new InvalidTypeException("Invalid type ASTRelop");
         }
         else if(!(tl instanceof IntType))
-            throw new InvalidTypeException("TODO");
+            throw new InvalidTypeException("Invalid type ASTRelop");
 
         return new BoolType();
     }

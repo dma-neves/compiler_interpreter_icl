@@ -17,7 +17,7 @@ public class ASTNot implements ASTNodeSC {
     public IType typecheck(Environment<IType> env) throws InvalidTypeException {
 
         if(!(n.typecheck(env) instanceof BoolType))
-            throw new InvalidTypeException("TODO");
+            throw new InvalidTypeException("Invalid type ASTNot");
 
         return new BoolType();
     }

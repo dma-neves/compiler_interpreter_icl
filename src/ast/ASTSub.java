@@ -18,7 +18,7 @@ public class ASTSub implements ASTNode {
         IType t2 = rhs.typecheck(env);
 
         if(!t1.equals(t2) || !(t1 instanceof IntType))
-            throw new InvalidTypeException("TODO");
+            throw new InvalidTypeException("Invalid type ASTSub");
 
         return new IntType();
     }

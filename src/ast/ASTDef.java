@@ -40,7 +40,7 @@ public class ASTDef implements ASTNodeSC {
                 env.assoc(id , nodeType);
 
             else if(!nodeType.equals(type))
-                throw new InvalidTypeException("TODO");
+                throw new InvalidTypeException("Invalid type ASTDef");
         }
 
         IType t = exp.typecheck(env);

@@ -19,7 +19,7 @@ public class ASTAdd implements ASTNode {
         IType t2 = rhs.typecheck(env);
 
         if(!t1.equals(t2) || !(t1 instanceof IntType))
-            throw new InvalidTypeException("TODO");
+            throw new InvalidTypeException("Invalid type ASTAdd");
 
         return new IntType();
     }

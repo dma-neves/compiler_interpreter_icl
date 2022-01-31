@@ -16,7 +16,7 @@ public class ICLInterpreter {
                 if (ast == null)
                     System.exit(0);
 
-                //ast.typecheck(new ast.Environment<>());
+                ast.typecheck(new ast.Environment<>());
                 ast.eval(new Environment<IValue>()).print();
             }
             catch(ParseException e) {

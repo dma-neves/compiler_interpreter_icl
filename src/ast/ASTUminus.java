@@ -16,7 +16,7 @@ public class ASTUminus implements ASTNode {
     public IType typecheck(Environment<IType> env) throws InvalidTypeException {
 
         if(!(n.typecheck(env) instanceof IntType))
-            throw new InvalidTypeException("TODO");
+            throw new InvalidTypeException("Invalid type ASTUminus");
 
         return new IntType();
     }
