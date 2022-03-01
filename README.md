@@ -1,5 +1,5 @@
 # compiler_interpreter_icl
-
+<!-- 
 **Description**
   - This project was developed by David Machado das Neves nº 55539
   - The compiler/interpreter follows all the specifications for the level 2 language.
@@ -12,13 +12,18 @@
   - Running the compiler: After compilation, go to the directory */src* and run `java ICLCompiler file.icl` (where *file.icl* should be the directory of the file containg the source code to be compiled). The compilation will generate a java program with the same name as the source code without the *.icl* extension. Example: `java ICLCompiler ../examples/pi.icl  ; java pi`.
 
 **Automated tests**
-  - Inside the folder */src* there is a *run-tests.sh* script which runs a set of tests automatically. This script tests if all the examples found in the folder */examples* output the correct results, using both the compiler and the interpreter.
-<!--
+  - Inside the folder */src* there is a *run-tests.sh* script which runs a set of tests automatically. This script tests if all the examples found in the folder */examples* output the correct results, using both the compiler and the interpreter. -->
+
+
 
 **Description**
 - An interpreter and respective compiler, that generates JVM bytecode, for a made up language. Wirtten as an assignment for the *Interpretation and Compilation of Programming Languages (ICL)* course.
 
 **Features**
+- Basic arithmetic and logic operations.
+- Various imperative operations (create varialbes, aliasing, sequentialization, etc).
+- Type system.
+- Recursive and non-recursive functions.
 
 **Examples**
 - Approximating 100*Pi
@@ -93,4 +98,3 @@
         end
     end;;
     ```
--->
